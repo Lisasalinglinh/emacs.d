@@ -1,0 +1,244 @@
+ion (:arguments ("args")) nil [32579 33533])
+            ("eshell/whoami" function (:arguments ("_args")) nil [33535 33668])
+            ("eshell-diff-window-config" variable nil nil [33670 33708])
+            ("eshell-diff-quit" function (:user-visible-flag t) nil [33710 33904])
+            ("nil-blank-string" function (:arguments ("string")) nil [33906 34080])
+            ("diff-no-select" function (:prototype-flag t) nil [34082 34115])
+            ("eshell/diff" function (:arguments ("args")) nil [34117 35589])
+            ("put" code nil nil [35591 35642])
+            ("put" code nil nil [35643 35690])
+            ("locate-history-list" variable nil nil [35692 35720])
+            ("eshell/locate" function (:arguments ("args")) nil [35722 36298])
+            ("put" code nil nil [36300 36353])
+            ("eshell/occur" function (:arguments ("args")) nil [36355 36578])
+            ("put" code nil nil [36580 36632])
+            ("em-unix" package nil nil [36634 36652]))          
+      :file "em-unix.el.gz"
+      :pointmax 36752
+      :fsize 9890
+      :lastmodtime '(23435 6126 0 0)
+      :unmatched-syntax nil)
+    (semanticdb-table "semanticdb-table-23bb904"
+      :major-mode emacs-lisp-mode
+      :tags 
+        '( ("esh-arg" package nil nil [1054 1072])
+            ("esh-mode" include nil nil [1074 1093])
+            ("eshell-arg" customgroup (:user-visible-flag t) nil [1095 1328])
+            ("eshell-parse-argument-hook" variable (:default-value (list 'eshell-parse-special-reference #'(lambda nil (when (and (not eshell-current-argument) (not eshell-current-quoted) (looking-at eshell-number-regexp) (eshell-arg-delimiter (match-end 0))) (goto-char (match-end 0)) (let ((str (match-string 0))) (if (> (length str) 0) (add-text-properties 0 (length str) '(number t) str)) str))) #'(lambda nil (unless eshell-inside-quote-regexp (setq eshell-inside-quote-regexp (format "[^%s]+" (apply 'string eshell-special-chars-inside-quoting)))) (unless eshell-outside-quote-regexp (setq eshell-outside-quote-regexp (format "[^%s]+" (apply 'string eshell-special-chars-outside-quoting)))) (when (looking-at (if eshell-current-quoted eshell-inside-quote-regexp eshell-outside-quote-regexp)) (goto-char (match-end 0)) (let ((str (match-string 0))) (if str (set-text-properties 0 (length str) nil str)) str))) #'(lambda nil (let (comment-p) (when (or (looking-at "[ 	]+") (and (not eshell-current-argument) (looking-at "#\\([^<'].*\\|$\\)") (setq comment-p t))) (if comment-p (add-text-properties (match-beginning 0) (match-end 0) '(comment t))) (goto-char (match-end 0)) (eshell-finish-arg)))) 'eshell-parse-backslash 'eshell-parse-literal-quote 'eshell-parse-double-quote 'eshell-parse-delimiter)) nil [1330 3818])
+            ("eshell-arg-load-hook" variable nil nil [3852 4035])
+            ("eshell-delimiter-argument-list" variable (:default-value '(59 38 124 62 32 9 10)) nil [4037 4218])
+            ("eshell-special-chars-inside-quoting" variable (:default-value '(92 34)) nil [4220 4388])
+            ("eshell-special-chars-outside-quoting" variable (:default-value (append eshell-delimiter-argument-list '(35 33 92 34 39))) nil [4390 4682])
+            ("eshell-current-argument" variable nil nil [4709 4745])
+            ("eshell-current-modifiers" variable nil nil [4746 4783])
+            ("eshell-arg-listified" variable nil nil [4784 4817])
+            ("eshell-nested-argument" variable nil nil [4818 4853])
+            ("eshell-current-quoted" variable nil nil [4854 4888])
+            ("eshell-inside-quote-regexp" variable nil nil [4889 4928])
+            ("eshell-outside-quote-regexp" variable nil nil [4929 4969])
+            ("eshell-arg-initialize" function nil nil [4987 5259])
+            ("eshell-insert-buffer-name" function
+               (:user-visible-flag t
+                :arguments ("buffer-name"))
+                nil [5261 5452])
+            ("eshell-escape-arg" function (:arguments ("string")) nil [5454 5643])
+            ("eshell-resolve-current-argument" function nil nil [5645 6403])
+            ("eshell-finish-arg" function (:arguments ("argument")) nil [6405 6591])
+            ("eshell-arg-delimiter" function (:arguments ("pos")) nil [6593 6859])
+            ("eshell-quote-argument" function (:arguments ("string")) nil [6861 7205])
+            ("eshell-parse-arguments" function (:arguments ("beg" "end")) nil [7228 8407])
+            ("eshell-parse-argument" function nil nil [8409 9527])
+            ("eshell-operator" function (:arguments ("_args")) nil [9529 9691])
+            ("eshell-looking-at-backslash-return" function (:arguments ("pos")) nil [9693 9944])
+            ("eshell-quote-backslash" function (:arguments ("string" "index")) nil [9946 10536])
+            ("eshell-parse-backslash" function nil nil [10538 11651])
+            ("eshell-parse-literal-quote" function nil nil [11653 12116])
+            ("eshell-parse-double-quote" function nil nil [12118 12631])
+            ("eshell-parse-special-reference" function nil nil [12633 13775])
+            ("eshell-parse-delimiter" function nil nil [13777 14484]))          
+      :file "esh-arg.el.gz"
+      :pointmax 14511
+      :fsize 4564
+      :lastmodtime '(23435 6126 0 0)
+      :unmatched-syntax nil)
+    (semanticdb-table "semanticdb-table-23eea0c"
+      :major-mode emacs-lisp-mode
+      :tags 
+        '( ("esh-module" package nil nil [882 903])
+            ("eshell" include nil nil [905 922])
+            ("esh-util" include nil nil [923 942])
+            ("eshell-module" customgroup (:user-visible-flag t) nil [944 1199])
+            ("load" code nil nil [1499 1533])
+            ("eshell-module-unload-hook" variable (:default-value '(eshell-unload-extension-modules)) nil [1556 1717])
+            ("eshell-modules-list" variable (:default-value '(eshell-alias eshell-banner eshell-basic eshell-cmpl eshell-dirs eshell-glob eshell-hist eshell-ls eshell-pred eshell-prompt eshell-script eshell-term eshell-unix)) nil [1719 2620])
+            ("eshell-using-module" function (:arguments ("module")) nil [2633 2888])
+            ("eshell-unload-extension-modules" function nil nil [2890 3215]))          
+      :file "esh-module.el.gz"
+      :pointmax 3245
+      :fsize 1469
+      :lastmodtime '(23435 6126 0 0)
+      :unmatched-syntax nil)
+    (semanticdb-table "semanticdb-table-2360d78"
+      :major-mode emacs-lisp-mode
+      :tags 
+        '( ("esh-var" package nil nil [3427 3445])
+            ("esh-util" include nil nil [3447 3466])
+            ("esh-cmd" include nil nil [3467 3485])
+            ("esh-opt" include nil nil [3486 3504])
+            ("pcomplete" include nil nil [3506 3526])
+            ("env" include nil nil [3527 3541])
+            ("ring" include nil nil [3542 3557])
+            ("eshell-var" customgroup (:user-visible-flag t) nil [3559 3887])
+            ("eshell-var-load-hook" variable nil nil [3910 4092])
+            ("eshell-prefer-lisp-variables" variable nil nil [4094 4240])
+            ("eshell-complete-export-definition" variable (:default-value t) nil [4242 4399])
+            ("eshell-modify-global-environment" variable nil nil [4401 4554])
+            ("eshell-variable-name-regexp" variable (:default-value "[A-Za-z0-9_-]+") nil [4556 4893])
+            ("eshell-variable-aliases-list" variable (:default-value '(("COLUMNS" (lambda (indices) (window-width)) t) ("LINES" (lambda (indices) (window-height)) t) ("_" (lambda (indices) (if (not indices) (car (last eshell-last-arguments)) (eshell-apply-indices eshell-last-arguments indices)))) ("?" eshell-last-command-status) ("$" eshell-last-command-result) ("0" eshell-command-name) ("1" (lambda (indices) (nth 0 eshell-command-arguments))) ("2" (lambda (indices) (nth 1 eshell-command-arguments))) ("3" (lambda (indices) (nth 2 eshell-command-arguments))) ("4" (lambda (indices) (nth 3 eshell-command-arguments))) ("5" (lambda (indices) (nth 4 eshell-command-arguments))) ("6" (lambda (indices) (nth 5 eshell-command-arguments))) ("7" (lambda (indices) (nth 6 eshell-command-arguments))) ("8" (lambda (indices) (nth 7 eshell-command-arguments))) ("9" (lambda (indices) (nth 8 eshell-command-arguments))) ("*" (lambda (indices) (if (not indices) eshell-command-arguments (eshell-apply-indices eshell-command-arguments indices)))))) nil [4895 6936])
+            ("put" code nil nil [6938 6997])
+            ("eshell-var-initialize" function nil nil [7015 8042])
+            ("eshell-handle-local-variables" function nil nil [8044 9722])
+            ("eshell-interpolate-variable" function nil nil [9724 10016])
+            ("eshell/define" function (:arguments ("var-alias" "definition")) nil [10018 10698])
+            ("eshell/export" function (:arguments ("sets")) nil [10700 11008])
+            ("pcomplete/eshell-mode/export" function nil nil [11010 11219])
+            ("eshell/unset" function (:arguments ("args")) nil [11221 11388])
+            ("pcomplete/eshell-mode/unset" function nil nil [11390 11523])
+            ("eshell/setq" function (:arguments ("args")) nil [11525 11767])
+            ("pcomplete/eshell-mode/setq" function nil nil [11769 11969])
+            ("eshell/env" function (:arguments ("args")) nil [12072 12448])
+            ("eshell-insert-envvar" function
+               (:user-visible-flag t
+                :arguments ("envvar-name"))
+                nil [12450 12668])
+            ("eshell-envvar-names" function (:arguments ("environment")) nil [12670 12910])
+            ("eshell-environment-variables" function nil nil [12912 13390])
+            ("eshell-parse-variable" function nil nil [13392 14078])
+            ("eshell-parse-variable-ref" function nil nil [14080 16846])
+            ("eshell-glob-function" variable nil nil [16848 16877])
+            ("eshell-parse-indices" function nil nil [16879 17287])
+            ("eshell-get-variable" function (:arguments ("name" "indices")) nil [17289 17940])
+            ("eshell-apply-indices" function (:arguments ("value" "indices")) nil [17942 19533])
+            ("eshell-index-value" function (:arguments ("value" "index")) nil [19535 20219])
+            ("eshell-complete-variable-reference" function nil nil [20253 20618])
+            ("eshell-variables-list" function nil nil [20620 21292])
+            ("eshell-complete-variable-assignment" function nil nil [21294 21740]))          
+      :file "esh-var.el.gz"
+      :pointmax 21767
+      :fsize 6969
+      :lastmodtime '(23435 6126 0 0)
+      :unmatched-syntax nil)
+    (semanticdb-table "semanticdb-table-24effe8"
+      :major-mode emacs-lisp-mode
+      :tags 
+        '( ("esh-opt" package nil nil [874 892])
+            ("esh-ext" include nil nil [894 912])
+            ("eshell-eval-using-options" function (:arguments ("name" "macro-args" "options" "body-forms")) nil [1147 4751])
+            ("eshell--args" variable nil nil [4846 4867])
+            ("eshell--do-opts" function (:arguments ("name" "options" "args")) nil [4869 5617])
+            ("eshell-show-usage" function (:arguments ("name" "options")) nil [5619 7015])
+            ("eshell--set-option" function (:arguments ("name" "ai" "opt" "options" "opt-vals")) nil [7017 7568])
+            ("eshell--process-option" function (:arguments ("name" "switch" "kind" "ai" "options" "opt-vals")) nil [7570 8765])
+            ("eshell--process-args" function (:arguments ("name" "args" "options")) nil [8767 10355]))          
+      :file "esh-opt.el.gz"
+      :pointmax 10382
+      :fsize 3623
+      :lastmodtime '(23435 6126 0 0)
+      :unmatched-syntax nil)
+    (semanticdb-table "semanticdb-table-2588f88"
+      :major-mode emacs-lisp-mode
+      :tags 
+        '( ("eshell" include nil nil [1443 1460])
+            ("ring" include nil nil [1461 1476])
+            ("esh-opt" include nil nil [1477 1495])
+            ("progn" code nil nil [1512 1936])
+            ("eshell-dirs-load-hook" variable nil nil [1959 2140])
+            ("eshell-pwd-convert-function" variable (:default-value (if (eshell-under-windows-p) 'expand-file-name 'identity)) nil [2142 2634])
+            ("eshell-ask-to-save-last-dir" variable (:default-value 'always) nil [2636 3268])
+            ("eshell-cd-shows-directory" variable nil nil [3270 3418])
+            ("eshell-cd-on-directory" variable (:default-value t) nil [3420 3558])
+            ("eshell-directory-change-hook" variable nil nil [3560 3694])
+            ("eshell-list-files-after-cd" variable nil nil [3696 4035])
+            ("eshell-pushd-tohome" variable nil nil [4037 4227])
+            ("eshell-pushd-dextract" variable nil nil [4229 4417])
+            ("eshell-pushd-dunique" variable nil nil [4419 4607])
+            ("eshell-dirtrack-verbose" variable (:default-value t) nil [4609 4811])
+            ("eshell-last-dir-ring-file-name" variable (:default-value (expand-file-name "lastdir" eshell-directory-name)) nil [4813 5142])
+            ("eshell-last-dir-ring-size" variable (:default-value 32) nil [5144 6123])
+            ("eshell-last-dir-unique" variable (:default-value t) nil [6125 6269])
+            ("eshell-dirstack" variable nil nil [6296 6436])
+            ("eshell-last-dir-ring" variable nil nil [6438 6514])
+            ("eshell-dirs-initialize" function nil nil [6532 8229])
+            ("eshell-save-some-last-dir" function nil nil [8231 8668])
+            ("eshell-lone-directory-p" function (:arguments ("file")) nil [8670 8887])
+            ("eshell-dirs-substitute-cd" function (:arguments ("args")) nil [8889 9172])
+            ("eshell-parse-user-reference" function nil nil [9174 9463])
+            ("eshell-parse-drive-letter" function nil nil [9465 9861])
+            ("pcomplete-stub" variable nil nil [9863 9886])
+            ("pcomplete-last-completion-raw" variable nil nil [9887 9925])
+            ("declare-function" code nil nil [9926 9977])
+            ("declare-function" code nil nil [9978 10032])
+            ("eshell-complete-user-reference" function nil nil [10034 10516])
+            ("eshell/pwd" function (:arguments ("_args")) nil [10518 10952])
+            ("eshell-expand-multiple-dots" function (:arguments ("path")) nil [10954 11718])
+            ("eshell-find-previous-directory" function (:arguments ("regexp")) nil [11720 12118])
+            ("eshell/cd" function (:arguments ("args")) nil [12120 13969])
+            ("put" code nil nil [13971 14020])
+            ("put" code nil nil [14021 14066])
+            ("eshell-add-to-dir-ring" function (:arguments ("path")) nil [14068 14572])
+            ("eshell/pushd" function (:arguments ("args")) nil [14595 16141])
+            ("put" code nil nil [16143 16195])
+            ("put" code nil nil [16196 16244])
+            ("eshell/popd" function (:arguments ("args")) nil [16260 17108])
+            ("put" code nil nil [17110 17161])
+            ("put" code nil nil [17162 17208])
+            ("eshell/dirs" function (:arguments ("if-verbose")) nil [17210 17744])
+            ("eshell-read-last-dir-ring" function nil nil [17746 18671])
+            ("eshell-write-last-dir-ring" function nil nil [18673 19381])
+            ("em-dirs" package nil nil [19383 19401]))          
+      :file "em-dirs.el.gz"
+      :pointmax 19501
+      :fsize 6127
+      :lastmodtime '(23435 6126 0 0)
+      :unmatched-syntax nil))
+  :file "!usr!local!share!emacs!27.0.50!lisp!eshell!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ;; Object semanticdb-project-database-file-17d93d0
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "semanticdb-project-database-file-17d93d0"
+  :tables
+  (list
+    (semanticdb-table "semanticdb-table-137308c"
+      :major-mode emacs-lisp-mode
+      :tags nil
+      :file "hl-todo-autoloads.el"
+      :pointmax 353
+      :fsize 2385
+      :lastmodtime '(23514 38533 491335 306000)
+      :unmatched-syntax nil))
+  :file "!home!ttt!.emacs.d!elpa!hl-todo-20181031.1909!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ;; Object semanticdb-project-database-file-1970a64
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "semanticdb-project-database-file-1970a64"
+  :tables
+  (list
+    (semanticdb-table "semanticdb-table-1654ae8"
+      :major-mode emacs-lisp-mode
+      :tags nil
+      :file "doom-modeline-autoloads.el"
+      :pointmax 365
+      :fsize 1008
+      :lastmodtime '(23506 29425 449471 342000)
+      :unmatched-syntax nil))
+  :file "!home!ttt!.emacs.d!elpa!doom-modeline-20181025.857!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          x¥VMSä6Í5üŠ.ö€I†ìV6C*•	İ©b [ä&ÛòX…,I†Ìşú¼–=ÃÂ)¾ÀX­§~İ¯Ÿœ—Óá/~ıáèˆ´ÕQ´ËX;;V†„4Ã+-ş¦¨_ ÂÙJ/:/£v6Œ?	2ê_]H#rmKmŠ„×[[À<víÒëE);Ş¥Ãıƒô·¶…²‘ş©¥]¤ i‡3ıds…~J.ŒÚ?8üøÇ¢‘ÚŒ×üÎ 7ó³	Õ1¶a²··Ğ±îr^Û[oØ«Fa\&üëZª´Q„¿ÖEj¥ä*út~C')°Œœ"[ï^6\y¥(¸*>J¯hé:*¤%¯J¢×yIÚrÏyh\©«%¿ël©<ÅZQT¾	|ÿà#?)«¼4tÙåFt¦Q HFhùe¨UIù2í8å®†èÔ8ÿˆ¨ãŒåšA‡#ê“ÈdäT=¹–»´‹ü–d$òXÅßà»¦UBéøÚµ P¤µ1”+ê‚ª:3â|Qú:»ş|qsMÓó[ú:Ï§ç×·GF[±ªT¥›ÖhC1½´q‰š0Â—“ùñgl™ş9;›]ß‚Î®ÏO®®èôbNSºœÎ¯gÇ7gÓ9]ŞÌ//®NÆDW¨ÊPPy£¦Àç•*BBaEüÈÎ”TË…J? 7	…·œÙ
+üd>Sg‰&‚¡–A8G†Ü’æ/.ogçŸò¬bõèÑkè&:Æ`
+oux„ù+Æ#úp€iïZr!`œê*Öpjœó#úÓ…èìˆ¾Liÿğà`_ü¼0¢›«i¢ŒHÆ¦ÁäI¿œà7o¾LÓşr¨yqØPªÉÖV¦0İµ²cÖb¶ˆ2¯î;Êî$ß€/„¸ûÊûy5»»i‡ã¾¸RmeĞheq'+sÁî	&¡¨Õ†•ªÒVZt¥hËœo0lÂÊ›ğ¢•¨{[Â õ—2Ç°{%K”LQ.:k15è430ŠçÑYPñ~°6¡3&1ì×q
+ïÊ&8¤Ø#ËRÔÎİ1óJyíüàšÓ¯ÒÂÖOfd“—’2.Ïó'cÃwjIÛÇ¢ cñm›ŞíÜaÆDŞU€ÌõAîãøÊYl¿…
+‚¸ï”_
+gÜ9ŠÊÈe‡ï×i»ïÆö.æÅr(sh7víˆ…ÚÏ×àûƒÉ0ÿ¾fCñimxâõjŸ²°lrg6›†3…şÊòşÇÍ¤,W˜W•ºİg_4}eNÀÀz²Û—Ş=è	/ŠlkŒÓ™ÈÍe}Pj;vmš¯-ÂŠ2ËñvJ8{ö²gÁyqS1‹óŸøq÷ÉnİÌŒG=1Öá„ŸDç—pÇÔÇ§U.öªÚ¸öà­íG.Äæ0¹^‚¸“Ø²¾Ic4†fŸ‚r«¼lo%ÆÂcY¦C¬0ˆo_ÙyaB›ˆm.‡Méœ÷Ón,

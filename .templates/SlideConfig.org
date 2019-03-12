@@ -1,0 +1,16 @@
+#+SUBTITLE: (Press ~?~ for help, ~n~ and ~p~ for next and previous slide)
+#+OPTIONS: reveal_progress:t reveal_history:t reveal_control:t
+#+OPTIONS: reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil toc nil
+#+OPTIONS: reveal_history:t reveal_mousewheel:t reveal_inter_presentation_links:t
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: reveal_title_slide:nil reveal_slide_number:h/v
+#+REVEAL_HLEVEL: 2
+#+REVEAL: split
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: fade
+#+REVEAL_THEME: moon
+#+REVEAL_EXTRA_CSS: file:///home/ttt/.emacs.d/plugin/reveal.js/css/reveal.scss
+#+REVEAL_PLUGINS: (markdown highlight notes)
+#+REVEAL_HIGHLIGHT_CSS: /home/ttt/.emacs.d/plugin/reveal.js/lib/css/monokai-sublime.css
