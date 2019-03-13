@@ -162,11 +162,13 @@ _C_       ^ ^         _P_erl          ce_n_ter
 
 ;; publish .org to .html
 ;; M-x org-publish-project
+;; require org version >= 9.2.1
 (setq org-html-htmlize-output-type 'css
       org-fontify-whole-heading-line t
       org-publish-project-alist
       '(
         ;; These are the main web files
+        ;; options @ https://www.gnu.org/software/emacs/manual/html_node/org/Publishing-options.html#Publishing-options
         ("org-notes"
          :base-directory "/home/ttt/OrgNotes/" ;; Change this to your local dir
          :base-extension "org"
@@ -180,29 +182,27 @@ _C_       ^ ^         _P_erl          ce_n_ter
          :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
          :sitemap-sort-files alphabetically ;;按照字母表顺序排列文件
          :section-numbers t
+         :with-date t
          :table-of-contents t
          :html-preamble t
          :html-head-include-default-style nil ;Disable the default css style
          :html-head-include-scripts nil ;Disable the default javascript snippet
          :html-link-home "../index.html"    ; Just the default for this project.
          :html-link-up "../sitemap.html"
-         ;; :html-head "<link rel=\"stylesheet\" href=\"/home/ttt/org/Notes/css/xahemacs.css\" type=\"text/css\"/>"
-         ;; :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://www.i3s.unice.fr/~malapert/css/worg.min.css\"/>" ;Enable custom css style
-         )
+         :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://gtcp2305.github.io/css/worg.min.css\"/>")
         ;; These are static files (images, pdf, etc)
         ("org-static"
          :base-directory "/home/ttt/OrgNotes/" ;; Change this to your local dir
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|txt\\|asc"
          :publishing-directory "/home/ttt/gtcp2305.github.io/"
-         :recursive
-         :publishing-function org-publish-attachment
-         )
+         :recursive t
+         :publishing-function org-publish-attachment)
 
         ("blog" :components ("org-notes" "org-static"))))
 
 ;; publish .org to slide
-(setq org-export-with-smart-quotes t
-      org-html-mathjax-options
+(setq org-export-with-smart-quotes t)
+(setq org-html-mathjax-options
       '((path "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
         (scale "100")
         (align "center")

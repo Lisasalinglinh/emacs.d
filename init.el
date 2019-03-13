@@ -82,7 +82,6 @@
 
 ;; Preferences
 (require 'init-basic)
-;; (require 'init-funcs)
 (require 'init-ui)
 (require 'init-edit)
 (require 'init-ivy)
@@ -95,7 +94,7 @@
 (require 'init-kill-ring)
 (require 'init-window)
 (require 'init-eshell)
-;; (require 'init-shell)
+(require 'init-shell)
 (require 'init-org)
 (require 'init-elfeed)
 (require 'init-utils)

@@ -124,7 +124,7 @@
            neotree-mode
            treemacs-mode)
           . hide-mode-line-mode)))
-
+(use-package posframe)
 ;; Icons
 ;; NOTE: Must run `M-x all-the-icons-install-fonts' manually on Windows
 (use-package all-the-icons
@@ -137,6 +137,8 @@
 (setq-default fill-column 80)
 (setq column-number-mode t)
 (setq line-number-mode t)
+(tool-bar-mode 0)
+(menu-bar-mode 0)
 
 ;; Show native line numbers if possible, otherwise use linum
 (if (fboundp 'display-line-numbers-mode)
