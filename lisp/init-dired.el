@@ -38,8 +38,8 @@
   :ensure nil
   :config
   ;; Always delete and copy recursively
-  (setq dired-recursive-deletes (quote top) ;;"always"means no asking
-        dired-recursive-copies (quote top) ;;top means ask once
+  (setq dired-recursive-deletes (quote always) ;;"always"means no asking
+        dired-recursive-copies (quote always) ;;top means ask once
         wdired-allow-to-change-permissions t
         ;;go to dired, then Alt+x split-window-below, then go to another dired dir. Now, when you press C to copy, the other dir in the split pane will be default destination
         dired-dwim-target t)

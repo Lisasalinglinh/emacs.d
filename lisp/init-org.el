@@ -34,16 +34,16 @@
   (require 'init-const))
 
 (use-package org
-  :ensure nil
+  :ensure t
   :commands org-try-structure-completion
   :functions hydra-org-template/body
   :bind (("C-c a" . org-agenda)
          ("C-c b" . org-switchb))
   :hook (org-indent-mode . (lambda() (diminish 'org-indent-mode)))
   :config
+  ;; (require 'org-tempo)
   (setq org-agenda-files '("~/org")
         org-todo-keywords '((sequence "TODO(T)" "DOING(I)" "HANGUP(H)" "|" "DONE(D)" "CANCEL(C)"))
-
         org-log-done 'time
         org-startup-indented t
         org-ascii-headline-spacing (quote (1 . 1))
@@ -98,12 +98,6 @@
     ;; Enable plantuml-mode for PlantUML files
     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 
-  ;; Pomodoro
-  (use-package org-pomodoro
-    :after org-agenda
-    :bind (:map org-agenda-mode-map
-                ("P" . org-pomodoro)))
-
   (eval-and-compile
     (defun hot-expand (str &optional mod)
       "Expand org template."
@@ -118,14 +112,14 @@
 
   (defhydra hydra-org-template (:color blue :hint nil)
     "
-_c_++     qu_o_te     _e_macs-lisp    _L_aTeX:
-_l_atex   _E_xample   _r_uby          _i_ndex:
-_a_scii   _v_erse     p_y_thon        _I_NCLUDE:
-_s_rc     _g_o        _p_erl          _H_TML:
-_h_tml    plant_u_ml  _S_HELL         _A_SCII:
-_C_       ^ ^         _P_erl          ce_n_ter
-^ ^       ^ ^         ^ ^
-"
+  _c_++     qu_o_te     _e_macs-lisp    _L_aTeX:
+  _l_atex   _E_xample   _r_uby          _i_ndex:
+  _a_scii   _v_erse     p_y_thon        _I_NCLUDE:
+  _s_rc     _g_o        _p_erl          _H_TML:
+  _h_tml    plant_u_ml  _S_HELL         _A_SCII:
+  _C_       ^ ^         _P_erl          ce_n_ter
+  ^ ^       ^ ^         ^ ^
+  "
     ("s" (hot-expand "<s"))
     ("E" (hot-expand "<e"))
     ("o" (hot-expand "<q"))
@@ -158,11 +152,11 @@ _C_       ^ ^         _P_erl          ce_n_ter
               (if (or (region-active-p) (looking-back "^\s*" 1))
                   (hydra-org-template/body)
                 (self-insert-command 1)))
-            org-mode-map))
+            org-mode-map)
+  )
 
-;; publish .org to .html
-;; M-x org-publish-project
-;; require org version >= 9.2.1
+;; ;; publish .org to .html
+;; ;; M-x org-publish-project
 (setq org-html-htmlize-output-type 'css
       org-fontify-whole-heading-line t
       org-publish-project-alist
@@ -200,23 +194,23 @@ _C_       ^ ^         _P_erl          ce_n_ter
 
         ("blog" :components ("org-notes" "org-static"))))
 
-;; publish .org to slide
-(setq org-export-with-smart-quotes t)
-(setq org-html-mathjax-options
-      '((path "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
-        (scale "100")
-        (align "center")
-        (indent "2em")
-        (mathml nil))
-      org-html-mathjax-template
-      "<script type=\"text/javascript\" src=\"%PATH\"></script>"
-      org-html-table-default-attributes
-      '(:border "0" :cellspacing "0" :cellpadding "6" :rules "none" :frame "none")
-      org-confirm-babel-evaluate nil)
+;; ;; publish .org to slide
+;; (setq org-export-with-smart-quotes t)
+;; (setq org-html-mathjax-options
+;;       '((path "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+;;         (scale "100")
+;;         (align "center")
+;;         (indent "2em")
+;;         (mathml nil))
+;;       org-html-mathjax-template
+;;       "<script type=\"text/javascript\" src=\"%PATH\"></script>"
+;;       org-html-table-default-attributes
+;;       '(:border "0" :cellspacing "0" :cellpadding "6" :rules "none" :frame "none")
+;;       org-confirm-babel-evaluate nil)
 
-(require 'ox-reveal)
-(setq org-reveal-root "file:///home/ttt/.emacs.d/plugin/reveal.js/"
-      Org-Reveal-title-slide nil)
+;; (require 'ox-reveal)
+;; (setq org-reveal-root "file:///home/ttt/.emacs.d/plugin/reveal.js/"
+;;       Org-Reveal-title-slide nil)
 
 (provide 'init-org)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

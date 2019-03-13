@@ -53,7 +53,7 @@
     :config
     ;; style option: "llvm" "google" "chromium" "mozilla" "webkit"
     ;; clang.llvm.org/docs/ClangFormatStyleOptions.html
-    ;; (setq clang-format-style-option "google")
+    (setq clang-format-style-option "google")
     )
 
   (use-package irony

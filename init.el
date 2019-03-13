@@ -90,7 +90,7 @@
 (require 'init-pyim)
 (require 'init-dired)
 (require 'init-highlight)
-(require 'init-ibuffer)
+;; (require 'init-ibuffer)
 (require 'init-kill-ring)
 (require 'init-window)
 (require 'init-eshell)

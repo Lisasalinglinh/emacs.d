@@ -43,75 +43,31 @@
 (setq icon-title-format frame-title-format)
 
 ;; Menu/Tool/Scroll bars
-(unless emacs/>=27p        ; Move to early init-file in 27
-  (unless sys/mac-x-p (menu-bar-mode -1))
-  (and (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
-  (and (fboundp 'scroll-bar-mode) (scroll-bar-mode -1)))
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
-;; Theme
-(defvar after-load-theme-hook nil
-  "Hook run after a color theme is loaded using `load-theme'.")
-(defun run-after-load-theme-hook (&rest _)
-  "Run `after-load-theme-hook'."
-  (run-hooks 'after-load-theme-hook))
-(advice-add #'load-theme :after #'run-after-load-theme-hook)
-
-(defun standardize-theme (theme)
-  "Standardize THEME."
-  (pcase theme
-    ('default 'doom-one)
-    ('classic 'doom-molokai)
-    ('doom 'doom-one)
-    ('dark 'doom-Iosvkem)
-    ('light 'doom-one-light)
-    ('daylight 'doom-tomorrow-day)
-    (_ theme)))
-
-(defun is-doom-theme-p (theme)
-  "Check whether the THEME is a doom theme. THEME is a symbol."
-  (string-prefix-p "doom" (symbol-name (standardize-theme theme))))
-
-(defun centaur-load-theme (theme)
-  "Set color THEME."
-  (interactive
-   (list
-    (intern (completing-read "Load theme: "
-                             '(default classic dark light daylight)))))
-  (let ((theme (standardize-theme theme)))
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme theme t)))
-
-(if (is-doom-theme-p centaur-theme)
-    (progn
-      (use-package doom-themes
-        :init (centaur-load-theme centaur-theme)
-        :config
-        ;; Enable flashing mode-line on errors
-        (doom-themes-visual-bell-config)
-        ;; Corrects (and improves) org-mode's native fontification.
-        (doom-themes-org-config)
-        ;; Enable custom treemacs theme (all-the-icons must be installed!)
-        (doom-themes-treemacs-config))
-
-      ;; Make certain buffers grossly incandescent
-      ;; (use-package solaire-mode
-      ;;   :functions persp-load-state-from-file
-      ;;   :hook (((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-      ;;          (minibuffer-setup . solaire-mode-in-minibuffer)
-      ;;          (after-load-theme . solaire-mode-swap-bg))
-      ;;   :config
-      ;;   (solaire-mode-swap-bg)
-      ;;   (advice-add #'persp-load-state-from-file
-      ;;               :after #'solaire-mode-restore-persp-mode-buffers))
-      )
-  (progn
-    (ignore-errors
-      (centaur-load-theme centaur-theme))))
+(use-package doom-themes
+  :init (load-theme 'doom-molokai t)
+  :config
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config)
+  ;; Enable custom treemacs theme (all-the-icons must be installed!)
+  (doom-themes-treemacs-config))
 
 ;; Mode-line
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
-  :init (setq doom-modeline-github t))
+  :init (setq doom-modeline-github t)
+  :config
+  (setq
+   doom-modeline-buffer-file-name-style 'truncate-upto-project
+   doom-modeline-enable-word-count t
+   doom-modeline-checker-simple-format t
+   doom-modeline-github t
+   doom-modeline-github-interval (* 30 60)))
 
 (defun mode-line-height ()
   "Get current height of mode-line."
@@ -137,8 +93,6 @@
 (setq-default fill-column 80)
 (setq column-number-mode t)
 (setq line-number-mode t)
-(tool-bar-mode 0)
-(menu-bar-mode 0)
 
 ;; Show native line numbers if possible, otherwise use linum
 (if (fboundp 'display-line-numbers-mode)

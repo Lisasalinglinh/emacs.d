@@ -56,7 +56,7 @@
   :functions hydra-frame-window/body
   :bind ([remap other-window] . ace-window)
   :custom-face
-  (aw-leading-char-face ((t (:inherit error :bold t :height 1.1))))
+  (aw-leading-char-face ((t (:inherit error :bold t :height 5.1))))
   (aw-mode-line-face ((t (:inherit mode-line-emphasis :bold t))))
   :preface
   (defun toggle-window-split ()
