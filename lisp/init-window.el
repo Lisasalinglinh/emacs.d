@@ -56,33 +56,9 @@
   :functions hydra-frame-window/body
   :bind ([remap other-window] . ace-window)
   :custom-face
-  (aw-leading-char-face ((t (:inherit error :bold t :height 5.1))))
+  (aw-leading-char-face ((t (:foreground "indian red" :background "white" :bold t :weight bold :box (:line-width 4 :color "lawn green" :style released-button) :slant italic :height 1.1))))
   (aw-mode-line-face ((t (:inherit mode-line-emphasis :bold t))))
-  :preface
-  (defun toggle-window-split ()
-    (interactive)
-    (if (= (count-windows) 2)
-        (let* ((this-win-buffer (window-buffer))
-               (next-win-buffer (window-buffer (next-window)))
-               (this-win-edges (window-edges (selected-window)))
-               (next-win-edges (window-edges (next-window)))
-               (this-win-2nd (not (and (<= (car this-win-edges)
-                                          (car next-win-edges))
-                                       (<= (cadr this-win-edges)
-                                          (cadr next-win-edges)))))
-               (splitter
-                (if (= (car this-win-edges)
-                       (car (window-edges (next-window))))
-                    'split-window-horizontally
-                  'split-window-vertically)))
-          (delete-other-windows)
-          (let ((first-win (selected-window)))
-            (funcall splitter)
-            (if this-win-2nd (other-window 1))
-            (set-window-buffer (selected-window) this-win-buffer)
-            (set-window-buffer (next-window) next-win-buffer)
-            (select-window first-win)
-            (if this-win-2nd (other-window 1))))))
+
   :hook (after-init . ace-window-display-mode)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
