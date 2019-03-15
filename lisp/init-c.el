@@ -53,8 +53,8 @@
     :config
     ;; style option: "llvm" "google" "chromium" "mozilla" "webkit"
     ;; clang.llvm.org/docs/ClangFormatStyleOptions.html
-    (setq clang-format-style-option "google")
-    )
+    (if (not(file-exists-p ".clang-format"))
+        (setq clang-format-style-option "llvm")))
 
   (use-package irony
     :defines (irony-mode-map irony-server-w32-pipe-buffer-size)
