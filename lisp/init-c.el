@@ -47,7 +47,7 @@
   (use-package clang-format
     :bind(
           :map c++-mode-map
-          ("C-i" . 'clang-format)
+          ;; ("C-i" . 'clang-format)
           ("C-c i" . 'clang-format-region)
           ("C-c u" . 'clang-format-buffer))
     :config
