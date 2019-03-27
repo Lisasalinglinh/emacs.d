@@ -31,9 +31,9 @@
           ;; (:name "basedict" :file "/home/un/.emacs.d/elpa-devel/pyim-basedict-20170726.1959/pyim-basedict.pyim")
           ))
   :custom-face
-  (pyim-page ((t (:inherit default :background "#333333" :foreground "sienna"))))
+  (pyim-page ((t (:inherit default :background "#333333" :foreground "yellow"))))
   :bind
-  ("M-j" . pyim-convert-code-at-point)
+  ("M-j" . pyim-convert-string-at-point)
   ("M-f" . pyim-forward-word)
   ("M-b" . pyim-backward-word))
 

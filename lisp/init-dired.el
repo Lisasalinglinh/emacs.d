@@ -48,15 +48,24 @@
 
   (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))  ; was dired-up-directory
 
+  ;; Using `insert-directory-program'
+  (setq ls-lisp-use-insert-directory-program t)
+
+  ;; Show directory first
+  (setq dired-listing-switches "-alh --group-directories-first")
   ;; Colourful dired
   (use-package diredfl
     :init (diredfl-global-mode 1))
+  ;; Quick sort dired buffers via hydra
+  (use-package dired-quick-sort
+    :bind (:map dired-mode-map
+                ("S" . hydra-dired-quick-sort/body)))
 
   ;; Shows icons
   (use-package all-the-icons-dired
     :after all-the-icons
     :diminish
-    :custom-face (all-the-icons-dired-dir-face ((t `(:foreground ,(face-background 'default)))))
+    :custom-face (all-the-icons-dired-dir-face ((t (:foreground nil))))
     :hook (dired-mode . all-the-icons-dired-mode)
     :config
     (defun my-all-the-icons-dired--display ()
