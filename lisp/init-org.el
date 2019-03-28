@@ -39,9 +39,10 @@
   :functions hydra-org-template/body
   :bind (("C-c a" . org-agenda)
          ("C-c b" . org-switchb))
-  :hook (org-indent-mode . (lambda() (diminish 'org-indent-mode)))
+  :hook
+  (org-indent-mode . (lambda() (diminish 'org-indent-mode)))
+  (org-mode . visual-line-mode)
   :config
-  ;; (require 'org-tempo)
   (setq org-agenda-files '("~/org")
         org-todo-keywords '((sequence "TODO(T)" "DOING(I)" "HANGUP(H)" "|" "DONE(D)" "CANCEL(C)"))
         org-log-done 'time
@@ -93,9 +94,7 @@
   (use-package plantuml-mode
     :config
     (setq plantuml-jar-path (expand-file-name "~/.emacs.d/plugin/plantuml.jar"))
-    ;; Plantuml integration with org-mode
     (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-    ;; Enable plantuml-mode for PlantUML files
     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 
   (eval-and-compile
