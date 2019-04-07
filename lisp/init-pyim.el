@@ -7,7 +7,7 @@
         ;; (global-set-key (kbd "C-\\") 'toggle-input-method)
         pyim-page-tooltip 'posframe
         pyim-default-scheme 'quanpin
-        pyim-page-style 'one-line
+        pyim-page-style 'vertical
         pyim-page-length 9)
 
   (setq-default pyim-english-input-switch-functions

@@ -33,6 +33,7 @@
 (eval-when-compile
   (require 'init-const))
 
+
 (use-package flycheck
   :diminish flycheck-mode
   :hook (after-init . global-flycheck-mode)
@@ -48,17 +49,15 @@
   (if (display-graphic-p)
       (if emacs/>=26p
           (use-package flycheck-posframe
-            :hook (flycheck-mode . flycheck-posframe-mode))
+            :hook (flycheck-mode . flycheck-posframe-mode)
+            :config (add-to-list 'flycheck-posframe-inhibit-functions
+                                 #'(lambda () (bound-and-true-p company-backend))))
         (use-package flycheck-pos-tip
           :defines flycheck-pos-tip-timeout
           :hook (global-flycheck-mode . flycheck-pos-tip-mode)
           :config (setq flycheck-pos-tip-timeout 30)))
     (use-package flycheck-popup-tip
-      :hook (flycheck-mode . flycheck-popup-tip-mode)))
-
-  ;; Jump to and fix syntax errors via `avy'
-  (use-package avy-flycheck
-    :hook (global-flycheck-mode . avy-flycheck-setup)))
+      :hook (flycheck-mode . flycheck-popup-tip-mode))))
 
 (provide 'init-flycheck)
 

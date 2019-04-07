@@ -102,9 +102,9 @@
   (setq ivy-on-del-error-function nil)
   (setq ivy-format-function 'ivy-format-function-arrow)
   ;; (setq ivy-initial-inputs-alist nil)
-
   (setq swiper-action-recenter t)
   (setq counsel-find-file-at-point t)
+  (setq counsel-preselect-current-file t)
   (setq counsel-yank-pop-separator "\n-------\n")
 
   ;; Use faster search tools: ripgrep or the silver search
@@ -114,6 +114,57 @@
                     "ag -S --noheading --nocolor --nofilename --numbers '%s' %s")
                    (t counsel-grep-base-command))))
     (setq counsel-grep-base-command cmd))
+
+
+  ;; Pre-fill for commands
+  ;; @see https://www.reddit.com/r/emacs/comments/b7g1px/withemacs_execute_commands_like_marty_mcfly/
+  (defvar my-ivy-fly-commands
+    '(query-replace-regexp
+      flush-lines
+      keep-lines
+      ivy-read
+      counsel-grep
+      counsel-ag
+      counsel-rg
+      counsel-pt))
+
+  (defun my-ivy-fly-back-to-present ()
+    (remove-hook 'pre-command-hook 'my-ivy-fly-back-to-present t)
+    (cond ((and (memq last-command my-ivy-fly-commands)
+                (equal (this-command-keys-vector) (kbd "M-p")))
+           ;; repeat one time to get straight to the first history item
+           (setq unread-command-events
+                 (append unread-command-events
+                         (listify-key-sequence (kbd "M-p")))))
+          ((or (memq this-command '(self-insert-command))
+               (memq this-command '(ivy-yank-word)))
+           (delete-region (point)
+                          (point-max)))))
+
+  (defun my-ivy-fly-time-travel ()
+    (when (memq this-command my-ivy-fly-commands)
+      (let* ((kbd (kbd "M-n"))
+             (cmd (key-binding kbd))
+             (future (and cmd
+                          (with-temp-buffer
+                            (when (ignore-errors
+                                    (call-interactively cmd) t)
+                              (buffer-string))))))
+        (when future
+          (save-excursion
+            (insert (propertize future 'face 'shadow)))
+          (add-hook 'pre-command-hook 'my-ivy-fly-back-to-present nil t)))))
+
+  (add-hook 'minibuffer-setup-hook #'my-ivy-fly-time-travel)
+
+  (push (cons 'swiper 'my-fly-swiper) ivy-hooks-alist)
+  (defun my-fly-swiper ()
+    (let ((sym (with-ivy-window (ivy-thing-at-point))))
+      (when sym
+        (add-hook 'pre-command-hook 'my-ivy-fly-back-to-present nil t)
+        (save-excursion
+          (insert (propertize sym 'face 'shadow))))))
+
 
   ;; Integration with `projectile'
   (with-eval-after-load 'projectile
@@ -133,6 +184,160 @@
   (use-package ivy-hydra
     :bind (:map ivy-minibuffer-map
                 ("M-o" . ivy-dispatching-done-hydra)))
+
+  ;; More friendly display transformer for Ivy
+  (use-package ivy-rich
+    :defines bookmark-alist
+    :functions (all-the-icons-icon-for-file
+                all-the-icons-icon-for-mode
+                all-the-icons-icon-for-dir
+                all-the-icons-icon-family
+                all-the-icons-auto-mode-match?
+                all-the-icons-dir-is-submodule)
+    :preface
+    (defun ivy-rich-bookmark-name (candidate)
+      (car (assoc candidate bookmark-alist)))
+
+    (defun ivy-rich-buffer-icon (candidate)
+      "Display buffer icons in `ivy-rich'."
+      (when (display-graphic-p)
+        (when-let* ((buffer (get-buffer candidate))
+                    (major-mode (buffer-local-value 'major-mode buffer))
+                    (icon (if (and (buffer-file-name buffer)
+                                   (all-the-icons-auto-mode-match? candidate))
+                              (all-the-icons-icon-for-file candidate)
+                            (all-the-icons-icon-for-mode major-mode))))
+          (if (symbolp icon)
+              (setq icon (all-the-icons-faicon "file" :height 1.0 :v-adjust -0.0575)))
+          (unless (symbolp icon)
+            (propertize icon
+                        'face `(
+                                :height 1.1
+                                :family ,(all-the-icons-icon-family icon)
+                                ))))))
+
+    (defun ivy-rich-file-icon (candidate)
+      "Display file icons in `ivy-rich'."
+      (when (display-graphic-p)
+        (let ((icon (if (file-directory-p (expand-file-name candidate))
+                        (all-the-icons-icon-for-dir candidate nil "")
+                      (all-the-icons-icon-for-file candidate))))
+          (unless (symbolp icon)
+            (propertize icon
+                        'face `(
+                                :height 1.1
+                                :family ,(all-the-icons-icon-family icon)
+                                ))))))
+    :hook (ivy-rich-mode . (lambda ()
+                             (setq ivy-virtual-abbreviate
+                                   (or (and ivy-rich-mode 'abbreviate) 'name))))
+    :init
+    (setq ivy-rich-display-transformers-list
+          '(ivy-switch-buffer
+            (:columns
+             ((ivy-rich-buffer-icon)
+              (ivy-rich-candidate (:width 30))
+              (ivy-rich-switch-buffer-size (:width 7))
+              (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+              (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+              (ivy-rich-switch-buffer-project (:width 15 :face success))
+              (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+             :predicate
+             (lambda (cand) (get-buffer cand)))
+            ivy-switch-buffer-other-window
+            (:columns
+             ((ivy-rich-buffer-icon)
+              (ivy-rich-candidate (:width 30))
+              (ivy-rich-switch-buffer-size (:width 7))
+              (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+              (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+              (ivy-rich-switch-buffer-project (:width 15 :face success))
+              (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+             :predicate
+             (lambda (cand) (get-buffer cand)))
+            counsel-switch-buffer
+            (:columns
+             ((ivy-rich-buffer-icon)
+              (ivy-rich-candidate (:width 30))
+              (ivy-rich-switch-buffer-size (:width 7))
+              (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+              (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+              (ivy-rich-switch-buffer-project (:width 15 :face success))
+              (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+             :predicate
+             (lambda (cand) (get-buffer cand)))
+            persp-switch-to-buffer
+            (:columns
+             ((ivy-rich-buffer-icon)
+              (ivy-rich-candidate (:width 30))
+              (ivy-rich-switch-buffer-size (:width 7))
+              (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+              (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+              (ivy-rich-switch-buffer-project (:width 15 :face success))
+              (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+             :predicate
+             (lambda (cand) (get-buffer cand)))
+            counsel-M-x
+            (:columns
+             ((counsel-M-x-transformer (:width 50))
+              (ivy-rich-counsel-function-docstring (:face font-lock-doc-face))))
+            counsel-describe-function
+            (:columns
+             ((counsel-describe-function-transformer (:width 50))
+              (ivy-rich-counsel-function-docstring (:face font-lock-doc-face))))
+            counsel-describe-variable
+            (:columns
+             ((counsel-describe-variable-transformer (:width 50))
+              (ivy-rich-counsel-variable-docstring (:face font-lock-doc-face))))
+            counsel-find-file
+            (:columns
+             ((ivy-rich-file-icon)
+              (ivy-read-file-transformer)))
+            counsel-file-jump
+            (:columns
+             ((ivy-rich-file-icon)
+              (ivy-rich-candidate)))
+            counsel-dired
+            (:columns
+             ((ivy-rich-file-icon)
+              (ivy-read-file-transformer)))
+            counsel-dired-jump
+            (:columns
+             ((ivy-rich-file-icon)
+              (ivy-rich-candidate)))
+            counsel-git
+            (:columns
+             ((ivy-rich-file-icon)
+              (ivy-rich-candidate)))
+            counsel-recentf
+            (:columns
+             ((ivy-rich-file-icon)
+              (ivy-rich-candidate (:width 0.8))
+              (ivy-rich-file-last-modified-time (:face font-lock-comment-face))))
+            counsel-bookmark
+            (:columns
+             ((ivy-rich-bookmark-type)
+              (ivy-rich-bookmark-name (:width 40))
+              (ivy-rich-bookmark-info)))
+            counsel-projectile-switch-project
+            (:columns
+             ((ivy-rich-file-icon)
+              (ivy-rich-candidate)))
+            counsel-projectile-find-file
+            (:columns
+             ((ivy-rich-file-icon)
+              (counsel-projectile-find-file-transformer)))
+            counsel-projectile-find-dir
+            (:columns
+             ((ivy-rich-file-icon)
+              (counsel-projectile-find-dir-transformer)))
+            treemacs-projectile
+            (:columns
+             ((ivy-rich-file-icon)
+              (ivy-rich-candidate)))))
+
+    (setq ivy-rich-parse-remote-buffer nil)
+    (ivy-rich-mode 1))
 
   ;; Integrate yasnippet
   (use-package ivy-yasnippet
