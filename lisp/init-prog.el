@@ -35,7 +35,28 @@
 (use-package prog-mode
   :ensure nil
   :hook ((after-init . global-prettify-symbols-mode)
-         (emacs-lisp-mode . (lambda () (push '("<=" . ?≤) prettify-symbols-alist)))))
+         (prog-mode . (lambda ()
+                        (setq prettify-symbols-alist
+                              '(("lambda" . ?λ)
+                                ("->" . ?→)
+                                ("->>" . ?↠)
+                                ("=>" . ?⇒)
+                                ("map" . ?↦)
+                                ("/=" . ?≠)
+                                ("!=" . ?≠)
+                                ("==" . ?≡)
+                                ("<=" . ?≤)
+                                (">=" . ?≥)
+                                ("=<<" . (?= (Br . Bl) ?≪))
+                                (">>=" . (?≫ (Br . Bl) ?=))
+                                ("<=<" . ?↢)
+                                (">=>" . ?↣)
+                                ("&&" . ?∧)
+                                ("||" . ?∨)
+                                ("not" . ?¬))))))
+  :init (setq prettify-symbols-unprettify-at-point 'right-edge))
+
+(use-package rmsbolt)
 
 (use-package fish-mode
   :hook (fish-mode . (lambda ()

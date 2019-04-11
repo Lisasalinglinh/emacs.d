@@ -32,6 +32,7 @@
 
 (use-package ibuffer
   :ensure nil
+  :defines all-the-icons-icon-alist
   :functions (all-the-icons-icon-for-buffer
               all-the-icons-icon-for-mode
               all-the-icons-icon-family)
@@ -45,9 +46,14 @@
   ;; Display buffer icons on GUI
   (when (display-graphic-p)
     (define-ibuffer-column icon (:name " ")
-      (let ((icon (all-the-icons-icon-for-buffer)))
+      (let ((icon (if (and buffer-file-name
+                           (all-the-icons-match-to-alist buffer-file-name
+                                                         all-the-icons-icon-alist))
+                      (all-the-icons-icon-for-file (file-name-nondirectory buffer-file-name)
+                                                   :height 0.9 :v-adjust -0.05)
+                    (all-the-icons-icon-for-mode major-mode :height 0.9 :v-adjust -0.05))))
         (if (symbolp icon)
-            (setq icon (all-the-icons-icon-for-mode 'fundamental-mode)))
+            (setq icon (all-the-icons-faicon "file-o" :height 1.0 :v-adjust -0.0575)))
         (unless (symbolp icon)
           (propertize icon
                       'face `(

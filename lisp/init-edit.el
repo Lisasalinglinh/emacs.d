@@ -145,11 +145,7 @@
 ;; Show number of matches in mode-line while searching
 (use-package anzu
   :diminish
-  :bind (([remap query-replace] . (lambda (&rest arg)
-                                    (interactive)
-                                    (if (thing-at-point 'symbol)
-                                        (anzu-query-replace-at-cursor)
-                                      (anzu-query-replace arg))))
+  :bind (([remap query-replace] . anzu-query-replace)
          ([remap query-replace-regexp] . anzu-query-replace-regexp)
          :map isearch-mode-map
          ([remap isearch-query-replace] . anzu-isearch-query-replace)
@@ -259,7 +255,13 @@
 ;; Treat undo history as a tree
 (use-package undo-tree
   :diminish
-  :hook (after-init . global-undo-tree-mode))
+  :hook (after-init . global-undo-tree-mode)
+  :init (setq undo-tree-visualizer-timestamps t
+              undo-tree-visualizer-diff t
+              undo-tree-auto-save-history t
+              undo-tree-enable-undo-in-region nil
+              undo-tree-history-directory-alist
+              `(("." . ,(concat user-emacs-directory "undo-tree-hist/")))))
 
 ;; Goto last change
 (use-package goto-chg
