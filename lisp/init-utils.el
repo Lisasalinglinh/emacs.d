@@ -104,9 +104,6 @@
 (unless sys/win32p
   (use-package sudo-edit))
 
-;; Tramp
-(use-package docker-tramp)
-
 ;; Discover key bindings and their meaning for the current Emacs major mode
 (use-package discover-my-major
   :bind (("C-h M-m" . discover-my-major)

@@ -40,6 +40,7 @@
   :bind (("C-c a" . org-agenda)
          ("C-c b" . org-switchb))
   :hook
+  (org-mode . org-indent-mode)
   (org-indent-mode . (lambda() (diminish 'org-indent-mode)))
   (org-mode . visual-line-mode)
   :config
@@ -56,11 +57,14 @@
   (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
   (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
   (add-to-list 'org-export-backends 'md)
-
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (set-fill-column 120)))
   ;; Babel
   (setq org-confirm-babel-evaluate nil
         org-src-fontify-natively t
-        org-src-tab-acts-natively t)
+        org-src-tab-acts-natively t
+        org-startup-truncated nil)
 
   (defvar load-language-list '((emacs-lisp . t)
                                (perl . t)

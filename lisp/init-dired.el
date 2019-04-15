@@ -63,7 +63,6 @@
 
   ;; Shows icons
   (use-package all-the-icons-dired
-    :after all-the-icons
     :diminish
     :custom-face (all-the-icons-dired-dir-face ((t (:foreground nil))))
     :hook (dired-mode . all-the-icons-dired-mode)
@@ -95,7 +94,7 @@
                                          (all-the-icons-octicon "repo" :height 0.9 :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
                                         (t (apply (car matcher) (list (cadr matcher) :height 0.9 :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust))))))
                             (insert (concat icon " ")))
-                        (insert (concat (all-the-icons-icon-for-file file :height 0.9 :v-adjust all-the-icons-dired-v-adjust) " ")))))))
+                        (insert (concat (all-the-icons-icon-for-file file :height 0.9 :v-adjust -0.05) " ")))))))
               (forward-line 1))))))
     (advice-add #'all-the-icons-dired--display :override #'my-all-the-icons-dired--display))
 

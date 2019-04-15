@@ -33,9 +33,10 @@
 (use-package ibuffer
   :ensure nil
   :defines all-the-icons-icon-alist
-  :functions (all-the-icons-icon-for-buffer
+  :functions (all-the-icons-icon-for-file
               all-the-icons-icon-for-mode
-              all-the-icons-icon-family)
+              all-the-icons-match-to-alist
+              all-the-icons-faicon)
   :commands (ibuffer-current-buffer
              ibuffer-find-file
              ibuffer-do-sort-by-alphabetic)
@@ -53,7 +54,7 @@
                                                    :height 0.9 :v-adjust -0.05)
                     (all-the-icons-icon-for-mode major-mode :height 0.9 :v-adjust -0.05))))
         (if (symbolp icon)
-            (setq icon (all-the-icons-faicon "file-o" :height 1.0 :v-adjust -0.0575)))
+            (setq icon (all-the-icons-faicon "file-o" :face 'all-the-icons-dsilver  :height 1.0 :v-adjust -0.0575)))
         (unless (symbolp icon)
           (propertize icon
                       'face `(
@@ -83,8 +84,8 @@
               (concat
                (all-the-icons-octicon "file-directory"
                                       :face ibuffer-filter-group-name-face
-                                      :v-adjust -0.04
-                                      :height 1.1)
+                                      :v-adjust -0.05
+                                      :height 1.25)
                " ")
             "Project: "))))
 

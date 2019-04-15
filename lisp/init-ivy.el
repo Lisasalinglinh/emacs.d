@@ -36,7 +36,8 @@
 (use-package counsel
   :diminish ivy-mode counsel-mode
   :defines (projectile-completion-system magit-completing-read-function)
-  :bind (("C-s" . swiper)
+  :commands swiper-isearch
+  :bind (("C-s" . swiper-isearch)
          ("C-S-s" . swiper-all)
 
          ("C-c C-r" . ivy-resume)
@@ -118,16 +119,17 @@
 
   ;; Pre-fill for commands
   ;; @see https://www.reddit.com/r/emacs/comments/b7g1px/withemacs_execute_commands_like_marty_mcfly/
-  (defvar my-ivy-fly-commands
-    '(query-replace-regexp
-      flush-lines
-      keep-lines
-      ivy-read
-      counsel-grep
-      counsel-ag
-      counsel-rg
-      counsel-pt))
-
+  (setq my-ivy-fly-commands
+        '(query-replace-regexp
+          flush-lines
+          keep-lines
+          ivy-read
+          swiper
+          swiper-isearch
+          counsel-grep
+          counsel-ag
+          counsel-rg
+          counsel-pt))
   (defun my-ivy-fly-back-to-present ()
     (remove-hook 'pre-command-hook 'my-ivy-fly-back-to-present t)
     (cond ((and (memq last-command my-ivy-fly-commands)
@@ -156,15 +158,6 @@
           (add-hook 'pre-command-hook 'my-ivy-fly-back-to-present nil t)))))
 
   (add-hook 'minibuffer-setup-hook #'my-ivy-fly-time-travel)
-
-  (push (cons 'swiper 'my-fly-swiper) ivy-hooks-alist)
-  (defun my-fly-swiper ()
-    (let ((sym (with-ivy-window (ivy-thing-at-point))))
-      (when sym
-        (add-hook 'pre-command-hook 'my-ivy-fly-back-to-present nil t)
-        (save-excursion
-          (insert (propertize sym 'face 'shadow))))))
-
 
   ;; Integration with `projectile'
   (with-eval-after-load 'projectile
@@ -214,7 +207,7 @@
                                                       :height 0.9 :v-adjust -0.05)
                        (all-the-icons-icon-for-mode major-mode :height 0.9 :v-adjust -0.05))))
           (if (symbolp icon)
-              (setq icon (all-the-icons-faicon "file-o" :height 0.9 :v-adjust -0.05))
+              (setq icon (all-the-icons-faicon "file-o" :face 'all-the-icons-dsilver :height 0.9 :v-adjust -0.05))
             icon))))
     (defun ivy-rich-file-icon (candidate)
       "Display file icons in `ivy-rich'."
@@ -225,21 +218,21 @@
                             (cond
                              ((and (fboundp 'tramp-tramp-file-p)
                                    (tramp-tramp-file-p default-directory))
-                              (all-the-icons-octicon "file-directory" :height 0.9 :v-adjust -0.01))
+                              (all-the-icons-octicon "file-directory" :height 0.9 :v-adjust 0.01))
                              ((file-symlink-p path)
-                              (all-the-icons-octicon "file-symlink-directory" :height 0.9 :v-adjust -0.01))
+                              (all-the-icons-octicon "file-symlink-directory" :height 0.9 :v-adjust 0.01))
                              ((all-the-icons-dir-is-submodule path)
-                              (all-the-icons-octicon "file-submodule" :height 0.9 :v-adjust -0.01))
+                              (all-the-icons-octicon "file-submodule" :height 0.9 :v-adjust 0.01))
                              ((file-exists-p (format "%s/.git" path))
                               (all-the-icons-octicon "repo" :height 0.9 :v-adjust -0.01))
                              (t (let ((matcher (all-the-icons-match-to-alist candidate all-the-icons-dir-icon-alist)))
-                                  (apply (car matcher) (list (cadr matcher) :height 0.9 :v-adjust -0.01))))))
+                                  (apply (car matcher) (list (cadr matcher) :height 0.9 :v-adjust 0.01))))))
                            ((string-match "^/.*:$" path)
                             (all-the-icons-material "settings_remote" :height 0.9 :v-adjust -0.2))
                            ((not (string-empty-p file))
                             (all-the-icons-icon-for-file file :height 0.9 :v-adjust -0.05)))))
           (if (symbolp icon)
-              (setq icon (all-the-icons-faicon "file-o" :height 0.9 :v-adjust -0.05))
+              (setq icon (all-the-icons-faicon "file-o" :face 'all-the-icons-dsilver :height 0.9 :v-adjust -0.05))
             icon))))
     :hook (ivy-rich-mode . (lambda ()
                              (setq ivy-virtual-abbreviate
