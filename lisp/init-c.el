@@ -36,6 +36,9 @@
 ;; C/C++ Mode
 (use-package cc-mode
   :ensure nil
+  :mode (("\\.h\\'" . c++-mode)
+         ("\\.cc\\'" . c++-mode)
+         ("\\.cpp\\'" . c++-mode))
   :bind (:map c-mode-base-map
               ("C-c c" . compile))
   :config

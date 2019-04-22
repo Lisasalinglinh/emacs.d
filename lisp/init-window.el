@@ -53,17 +53,41 @@
 
 ;; Quickly switch windows
 (use-package ace-window
-  :functions hydra-frame-window/body
+  :functions (hydra-frame-window/body my-aw-window<)
   :bind ([remap other-window] . ace-window)
   :custom-face
   (aw-leading-char-face ((t (:foreground "indian red" :background "white" :bold t :weight bold :box (:line-width 4 :color "lawn green" :style released-button) :slant italic :height 1.1))))
   (aw-mode-line-face ((t (:inherit mode-line-emphasis :bold t))))
-
+  :preface
+  (defun toggle-window-split ()
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                        (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                        (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
   :hook (after-init . ace-window-display-mode)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 
-  (setq aw-reverse-frame-list nil)
+  ;; (setq aw-reverse-frame-list nil)
 
   ;; https://github.com/abo-abo/ace-window/wiki/Hydra
   ;; hydra-frame-window is designed from `ace-window' and
@@ -92,7 +116,7 @@ _F_ullscreen            ^ ^             _b_alance^^^^          ^ ^        *  /\\
     ("l" enlarge-window-horizontally)
     ("q" nil "quit"))
   (add-to-list 'aw-dispatch-alist '(?w hydra-frame-window/body) t)
-  (bind-key "C-c w" #'hydra-frame-window/body))
+  (bind-key "C-c o" #'hydra-frame-window/body))
 
 ;; Enforce rules for popups
 (defvar shackle--popup-window-list nil) ; all popup windows
@@ -188,6 +212,7 @@ _F_ullscreen            ^ ^             _b_alance^^^^          ^ ^        *  /\\
           (list-environment-mode :select t :size 0.3 :align 'below :autoclose t)
           (profiler-report-mode :select t :size 0.5 :align 'below)
           (tabulated-list-mode :align 'below))))
+
 
 (provide 'init-window)
 

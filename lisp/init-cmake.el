@@ -33,9 +33,6 @@
 ;; C++
 ;; (use-package c++-mode
 ;;   :after rtags
-;;   :mode (("\\.h\\'" . c++-mode)
-;;          ("\\.cc\\'" . c++-mode)
-;;          ("\\.cpp\\'" . c++-mode))
 ;;   :bind (:map c++-mode-map
 ;;               ("<home>" . 'rtags-find-symbol-at-point)
 ;;               ("<prior>" . 'rtags-location-stack-back)

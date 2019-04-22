@@ -57,7 +57,7 @@
          (iedit-mode . (lambda () (symbol-overlay-mode -1)))
          (iedit-mode-end . symbol-overlay-mode)))
 
-;; Highlight matching paren
+;; Highlight matching parens
 (use-package paren
   :ensure nil
   :hook (after-init . show-paren-mode)
@@ -69,12 +69,16 @@
 (when (display-graphic-p)
   (use-package highlight-indent-guides
     :diminish
-    :hook (prog-mode . highlight-indent-guides-mode)
+    :hook (prog-mode . (lambda ()
+                         ;; WORKAROUND:Fix the issue of not displaying plots
+                         ;; @see https://github.com/DarthFennec/highlight-indent-guides/issues/55
+                         (unless (eq major-mode 'ein:notebook-multilang-mode)
+                           (highlight-indent-guides-mode 1))))
     :config
     (setq highlight-indent-guides-method 'character)
-    (setq highlight-indent-guides-responsive t)
+    (setq highlight-indent-guides-responsive 'top)
 
-    ;; Disable `highlight-indet-guides-mode' in `swiper'
+    ;; Disable `highlight-indent-guides-mode' in `swiper'
     ;; https://github.com/DarthFennec/highlight-indent-guides/issues/40
     (with-eval-after-load 'ivy
       (defadvice ivy-cleanup-string (after my-ivy-cleanup-hig activate)
@@ -91,34 +95,21 @@
   :diminish
   :hook (prog-mode . rainbow-mode)
   :config
-  ;; Override `hl-line' faces
-  ;; HACK: Use overlay instead of text properties.
-  ;; https://emacs.stackexchange.com/questions/23958/combine-highlight-symbol-mode-and-hl-line-mode
-  (defun rainbow-colorize-match (color &optional match)
-    "Return a matched string propertized with a face whose
-background is COLOR. The foreground is computed using
-`rainbow-color-luminance', and is either white or black."
+  ;; HACK: Use overlay instead of text properties to override `hl-line' faces.
+  ;; @see https://emacs.stackexchange.com/questions/36420
+  (defun my-rainbow-colorize-match (color &optional match)
     (let* ((match (or match 0))
            (ov (make-overlay (match-beginning match) (match-end match))))
       (overlay-put ov
                    'face `((:foreground ,(if (> 0.5 (rainbow-x-color-luminance color))
                                              "white" "black"))
                            (:background ,color)))
-      (ignore-errors
-        (overlay-put ov 'symbol 'ovrainbow))))
+      (overlay-put ov 'ovrainbow t)))
+  (advice-add #'rainbow-colorize-match :override #'my-rainbow-colorize-match)
 
-  (defun rainbow-turn-off ()
-    "Turn off rainbow-mode."
-    (font-lock-remove-keywords
-     nil
-     `(,@rainbow-hexadecimal-colors-font-lock-keywords
-       ,@rainbow-x-colors-font-lock-keywords
-       ,@rainbow-latex-rgb-colors-font-lock-keywords
-       ,@rainbow-r-colors-font-lock-keywords
-       ,@rainbow-html-colors-font-lock-keywords
-       ,@rainbow-html-rgb-colors-font-lock-keywords))
-    (ignore-errors
-      (remove-overlays (point-min) (point-max) 'symbol 'ovrainbow))))
+  (defun my-rainbow-clear-overlays ()
+    (remove-overlays (point-min) (point-max) 'ovrainbow t))
+  (advice-add #'ranibow-turn-off :after #'my-rainbow-clear-overlays))
 
 ;; Highlight brackets according to their depth
 (use-package rainbow-delimiters
@@ -141,7 +132,7 @@ background is COLOR. The foreground is computed using
 
 ;; Highlight uncommitted changes
 (use-package diff-hl
-  :defines desktop-minor-mode-table
+  :defines (diff-hl-margin-symbols-alist desktop-minor-mode-table)
   :commands diff-hl-magit-post-refresh
   :custom-face
   (diff-hl-change ((t (:background "#46D9FF"))))
@@ -156,11 +147,14 @@ background is COLOR. The foreground is computed using
   (diff-hl-flydiff-mode 1)
 
   ;; Set fringe style
+  (setq-default fringes-outside-margins t)
   (setq diff-hl-draw-borders nil)
-  (setq fringes-outside-margins t)
   (if sys/mac-x-p (set-fringe-mode '(4 . 8)))
 
   (unless (display-graphic-p)
+    (setq diff-hl-margin-symbols-alist
+          '((insert . " ") (delete . " ") (change . " ")
+            (unknown . " ") (ignored . " ")))
     ;; Fall back to the display margin since the fringe is unavailable in tty
     (diff-hl-margin-mode 1)
     ;; Avoid restoring `diff-hl-margin-mode'

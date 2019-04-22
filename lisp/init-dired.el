@@ -38,28 +38,39 @@
   :ensure nil
   :config
   ;; Always delete and copy recursively
-  (setq dired-recursive-deletes (quote always) ;;"always"means no asking
-        dired-recursive-copies (quote always) ;;top means ask once
-        wdired-allow-to-change-permissions t
-        ;;go to dired, then Alt+x split-window-below, then go to another dired dir. Now, when you press C to copy, the other dir in the split pane will be default destination
-        dired-dwim-target t)
-
+  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies 'always)
+  (setq wdired-allow-to-change-permissions t)
+  (setq dired-dwim-target t)
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file) ; was dired-advertised-find-file
 
   (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))  ; was dired-up-directory
 
-  ;; Using `insert-directory-program'
-  (setq ls-lisp-use-insert-directory-program t)
 
-  ;; Show directory first
-  (setq dired-listing-switches "-alh --group-directories-first")
+  (when sys/macp
+    ;; Suppress the warning: `ls does not support --dired'.
+    (setq dired-use-ls-dired nil)
+
+    (when (executable-find "gls")
+      ;; Use GNU ls as `gls' from `coreutils' if available.
+      (setq insert-directory-program "gls")))
+
+  (when (or (and sys/macp (executable-find "gls"))
+            (and (not sys/macp) (executable-find "ls")))
+    ;; Using `insert-directory-program'
+    (setq ls-lisp-use-insert-directory-program t)
+
+    ;; Show directory first
+    (setq dired-listing-switches "-alh --group-directories-first")
+
+    ;; Quick sort dired buffers via hydra
+    (use-package dired-quick-sort
+      :bind (:map dired-mode-map
+                  ("S" . hydra-dired-quick-sort/body))))
+
   ;; Colourful dired
   (use-package diredfl
     :init (diredfl-global-mode 1))
-  ;; Quick sort dired buffers via hydra
-  (use-package dired-quick-sort
-    :bind (:map dired-mode-map
-                ("S" . hydra-dired-quick-sort/body)))
 
   ;; Shows icons
   (use-package all-the-icons-dired
@@ -75,6 +86,7 @@
               (remote-p (and (fboundp 'tramp-tramp-file-p)
                              (tramp-tramp-file-p default-directory))))
           (save-excursion
+            (setq tab-width 1)
             (goto-char (point-min))
             (while (not (eobp))
               (when (dired-move-to-filename nil)
@@ -82,27 +94,24 @@
                   (unless (member file '("." ".."))
                     (let ((filename (dired-get-filename nil t)))
                       (if (file-directory-p filename)
-                          (let* ((matcher (all-the-icons-match-to-alist file all-the-icons-dir-icon-alist))
-                                 (icon (cond
-                                        (remote-p
-                                         (all-the-icons-octicon "file-directory" :height 0.9 :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-                                        ((file-symlink-p filename)
-                                         (all-the-icons-octicon "file-symlink-directory" :height 0.9 :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-                                        ((all-the-icons-dir-is-submodule filename)
-                                         (all-the-icons-octicon "file-submodule" :height 0.9 :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-                                        ((file-exists-p (format "%s/.git" filename))
-                                         (all-the-icons-octicon "repo" :height 0.9 :v-adjust all-the-icons-dired-v-adjust :face 'all-the-icons-dired-dir-face))
-                                        (t (apply (car matcher) (list (cadr matcher) :height 0.9 :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust))))))
-                            (insert (concat icon " ")))
-                        (insert (concat (all-the-icons-icon-for-file file :height 0.9 :v-adjust -0.05) " ")))))))
+                          (let ((icon (cond
+                                       (remote-p
+                                        (all-the-icons-octicon "file-directory" :height 1.0 :v-adjust all-the-icons-dired-v-adjust))
+                                       ((file-symlink-p filename)
+                                        (all-the-icons-octicon "file-symlink-directory" :height 1.0 :v-adjust all-the-icons-dired-v-adjust))
+                                       ((all-the-icons-dir-is-submodule filename)
+                                        (all-the-icons-octicon "file-submodule" :height 1.0 :v-adjust all-the-icons-dired-v-adjust))
+                                       ((file-exists-p (format "%s/.git" filename))
+                                        (all-the-icons-octicon "repo" :height 1.1 :v-adjust all-the-icons-dired-v-adjust ))
+                                       (t (let ((matcher (all-the-icons-match-to-alist file all-the-icons-dir-icon-alist)))
+                                            (apply (car matcher) (list (cadr matcher) :face 'all-the-icons-dired-dir-face :v-adjust all-the-icons-dired-v-adjust)))))))
+                            (insert (concat "\t" icon "\t")))
+                        (insert (concat "\t" (all-the-icons-icon-for-file file :v-adjust -0.05) "\t")))))))
               (forward-line 1))))))
     (advice-add #'all-the-icons-dired--display :override #'my-all-the-icons-dired--display))
 
   ;; Extra Dired functionality
   (use-package dired-aux :ensure nil)
-  (use-package dired-k
-    :config
-    (define-key dired-mode-map (kbd "K") 'dired-k))
   (use-package dired-x
     :ensure nil
     :demand

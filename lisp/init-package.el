@@ -118,7 +118,7 @@
   (setq paradox-execute-asynchronously t)
   (setq paradox-github-token t)
   (setq paradox-display-star-count nil)
-
+  (setq paradox-github-token  "a395c1cba60dcd145171fb6870f5550a3941e4b0") 
   (defalias #'upgrade-packages #'paradox-upgrade-packages)
 
   ;; Replace default `list-packages'
