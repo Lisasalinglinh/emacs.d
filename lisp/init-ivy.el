@@ -77,16 +77,6 @@
 
          :map ivy-minibuffer-map
          ("C-w" . ivy-yank-word)
-
-         ;; Search at point
-         ;; "M-j": word-at-point
-         ;; "M-n"/"C-w": symbol-at-point
-         ;; Refer to https://www.emacswiki.org/emacs/SearchAtPoint#toc8
-         ;; and https://github.com/abo-abo/swiper/wiki/FAQ
-         ("C-w" . (lambda ()
-                    (interactive)
-                    (insert (format "%s" (with-ivy-window (ivy-thing-at-point))))))
-
          :map counsel-find-file-map
          ("C-h" . counsel-up-directory)
 
@@ -183,6 +173,30 @@
           (add-hook 'pre-command-hook 'my-ivy-fly-back-to-present nil t)))))
 
   (add-hook 'minibuffer-setup-hook #'my-ivy-fly-time-travel)
+  ;; Improve search experience of `swiper'
+  ;; @see https://emacs-china.org/t/swiper-swiper-isearch/9007/12
+  (defun my-swiper-toggle-counsel-rg ()
+    "Toggle `counsel-rg' with current swiper input."
+    (interactive)
+    (let ((text (replace-regexp-in-string
+                 "\n" ""
+                 (replace-regexp-in-string
+                  "\\\\_<" ""
+                  (replace-regexp-in-string
+                   "\\\\_>" ""
+                   (replace-regexp-in-string "^.*Swiper: " ""
+                                             (thing-at-point 'line t)))))))
+      (ivy-quit-and-run
+        (counsel-rg text default-directory))))
+  (bind-key "<C-return>" #'my-swiper-toggle-counsel-rg swiper-map)
+
+  (with-eval-after-load 'rg
+    (defun my-swiper-toggle-rg-dwim ()
+      "Toggle `rg-dwim' with current swiper input."
+      (interactive)
+      (ivy-quit-and-run (rg-dwim default-directory)))
+    (bind-key "<M-return>" #'my-swiper-toggle-rg-dwim swiper-map)
+    (bind-key "<M-return>" #'my-swiper-toggle-rg-dwim ivy-minibuffer-map))
 
   ;; Integration with `projectile'
   (with-eval-after-load 'projectile

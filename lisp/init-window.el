@@ -90,11 +90,12 @@
   ;; (setq aw-reverse-frame-list nil)
 
   ;; https://github.com/abo-abo/ace-window/wiki/Hydra
-  ;; hydra-frame-window is designed from `ace-window' and
-  ;; matches aw-dispatch-alist with a few extra
-  (defhydra hydra-frame-window (:color red :hint nil)
+  ;; `hydra-frame-window' is designed from `ace-window' and
+  ;; matches `aw-dispatch-alist' with a few extra
+  (defhydra hydra-frame-window (:color red :hint none)
     "
 ^Frame^                 ^Window^      Window Size^^^^^^    ^Text Zoom^               (__)
+^^──────────────────────^^────────────^^──────────^^^^─────^^───────────────         (__)
 _0_: delete             _t_oggle        ^ ^ _k_ ^ ^            _=_                   (oo)
 _1_: delete others      _s_wap          _h_ ^+^ _l_            ^+^             /------\\/
 _2_: new                _d_elete        ^ ^ _j_ ^ ^            _-_            / |    ||
