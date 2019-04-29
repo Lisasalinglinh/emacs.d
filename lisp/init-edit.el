@@ -44,6 +44,10 @@
 (setq auto-save-default nil)               ; Disable auto save
 (setq set-mark-command-repeat-pop t)       ; Repeating C-SPC after popping mark pops it again
 ;; (setq-default kill-whole-line t)           ; Kill line including '\n'
+;; ;; overwrite selected text
+;; (delete-selection-mode t)
+;; ;; overwrite selected text
+;; (delete-selection-mode t)
 
 (setq-default major-mode 'text-mode)
 
@@ -53,8 +57,8 @@
 ;; Tab and Space
 ;; Permanently indent with spaces, never with TABs
 (setq-default c-basic-offset   4
-              tab-width        4
-              indent-tabs-mode nil)
+          tab-width        4
+          indent-tabs-mode nil)
 
 ;; Delete selection if you insert
 (use-package delsel
@@ -77,10 +81,10 @@
   :ensure nil
   :defines dired-mode-map
   :bind (("C-c C-z ." . browse-url-at-point)
-         ("C-c C-z b" . browse-url-of-buffer)
-         ("C-c C-z r" . browse-url-of-region)
-         ("C-c C-z u" . browse-url)
-         ("C-c C-z v" . browse-url-of-file))
+     ("C-c C-z b" . browse-url-of-buffer)
+     ("C-c C-z r" . browse-url-of-region)
+     ("C-c C-z u" . browse-url)
+     ("C-c C-z v" . browse-url-of-file))
   :init
   (with-eval-after-load 'dired
     (bind-key "C-c C-z f" #'browse-url-of-file dired-mode-map)))
@@ -89,22 +93,22 @@
 (use-package goto-addr
   :ensure nil
   :hook ((text-mode . goto-address-mode)
-         (prog-mode . goto-address-prog-mode)))
+     (prog-mode . goto-address-prog-mode)))
 
 ;; Jump to things in Emacs tree-style
 (use-package avy
   :bind (("C-:" . avy-goto-char-2)
-         ("C-'" . avy-goto-char-2)
-         ("M-g f" . avy-goto-line)
-         ("M-g w" . avy-goto-word-1)
-         ("M-g e" . avy-goto-word-0))
+     ("C-'" . avy-goto-char-2)
+     ("M-g f" . avy-goto-line)
+     ("M-g w" . avy-goto-word-1)
+     ("M-g e" . avy-goto-word-0))
   :hook (after-init . avy-setup-default)
   :config (setq avy-background t))
 
 ;; Kill text between the point and the character CHAR
 (use-package avy-zap
   :bind (("M-z" . avy-zap-to-char-dwim)
-         ("M-Z" . avy-zap-up-to-char-dwim)))
+     ("M-Z" . avy-zap-up-to-char-dwim)))
 
 ;; Quickly follow links
 (use-package ace-link
@@ -119,11 +123,11 @@
 (use-package aggressive-indent
   :diminish
   :hook ((after-init . global-aggressive-indent-mode)
-         ;; FIXME: Disable in big files due to the performance issues
-         ;; https://github.com/Malabarba/aggressive-indent-mode/issues/73
-         (find-file . (lambda ()
-                        (if (> (buffer-size) (* 3000 80))
-                            (aggressive-indent-mode -1)))))
+     ;; FIXME: Disable in big files due to the performance issues
+     ;; https://github.com/Malabarba/aggressive-indent-mode/issues/73
+     (find-file . (lambda ()
+            (if (> (buffer-size) (* 3000 80))
+                (aggressive-indent-mode -1)))))
   :config
   ;; Disable in some modes
   (dolist (mode '(asm-mode web-mode html-mode css-mode robot-mode go-mode))
@@ -133,22 +137,22 @@
   (add-to-list
    'aggressive-indent-dont-indent-if
    '(and (or (derived-mode-p 'c-mode)
-             (derived-mode-p 'c++-mode)
-             (derived-mode-p 'csharp-mode)
-             (derived-mode-p 'java-mode)
-             (derived-mode-p 'go-mode)
-             (derived-mode-p 'swift-mode))
-         (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
-                             (thing-at-point 'line))))))
+         (derived-mode-p 'c++-mode)
+         (derived-mode-p 'csharp-mode)
+         (derived-mode-p 'java-mode)
+         (derived-mode-p 'go-mode)
+         (derived-mode-p 'swift-mode))
+     (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
+                 (thing-at-point 'line))))))
 
 ;; Show number of matches in mode-line while searching
 (use-package anzu
   :diminish
   :bind (([remap query-replace] . anzu-query-replace)
-         ([remap query-replace-regexp] . anzu-query-replace-regexp)
-         :map isearch-mode-map
-         ([remap isearch-query-replace] . anzu-isearch-query-replace)
-         ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
+     ([remap query-replace-regexp] . anzu-query-replace-regexp)
+     :map isearch-mode-map
+     ([remap isearch-query-replace] . anzu-isearch-query-replace)
+     ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
   :hook (after-init . global-anzu-mode))
 
 ;; An all-in-one comment command to rule them all
@@ -168,9 +172,9 @@
 (use-package ediff
   :ensure nil
   :hook(;; show org ediffs unfolded
-        ;; (ediff-prepare-buffer . outline-show-all)
-        ;; restore window layout when done
-        (ediff-quit . winner-undo))
+    ;; (ediff-prepare-buffer . outline-show-all)
+    ;; restore window layout when done
+    (ediff-quit . winner-undo))
   :config
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   (setq ediff-split-window-function 'split-window-horizontally)
@@ -186,15 +190,15 @@
 (use-package iedit
   :defines desktop-minor-mode-table
   :bind (("C-;" . iedit-mode)
-         ("C-x r RET" . iedit-rectangle-mode)
-         :map isearch-mode-map ("C-;" . iedit-mode-from-isearch)
-         :map esc-map ("C-;" . iedit-execute-last-modification)
-         :map help-map ("C-;" . iedit-mode-toggle-on-function))
+     ("C-x r RET" . iedit-rectangle-mode)
+     :map isearch-mode-map ("C-;" . iedit-mode-from-isearch)
+     :map esc-map ("C-;" . iedit-execute-last-modification)
+     :map help-map ("C-;" . iedit-mode-toggle-on-function))
   :config
   ;; Avoid restoring `iedit-mode'
   (with-eval-after-load 'desktop
     (add-to-list 'desktop-minor-mode-table
-                 '(iedit-mode nil))))
+         '(iedit-mode nil))))
 
 ;; Increase selected region by semantic units
 (use-package expand-region
@@ -203,15 +207,15 @@
 ;; Multiple cursors
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c"   . mc/edit-lines)
-         ("C->"           . mc/mark-next-like-this)
-         ("C-<"           . mc/mark-previous-like-this)
-         ("C-c C-<"       . mc/mark-all-like-this)
-         ("C-M->"         . mc/skip-to-next-like-this)
-         ("C-M-<"         . mc/skip-to-previous-like-this)
-         ("s-<mouse-1>"   . mc/add-cursor-on-click)
-         ("C-S-<mouse-1>" . mc/add-cursor-on-click)
-         :map mc/keymap
-         ("C-|" . mc/vertical-align-with-space)))
+     ("C->"           . mc/mark-next-like-this)
+     ("C-<"           . mc/mark-previous-like-this)
+     ("C-c C-<"       . mc/mark-all-like-this)
+     ("C-M->"         . mc/skip-to-next-like-this)
+     ("C-M-<"         . mc/skip-to-previous-like-this)
+     ("s-<mouse-1>"   . mc/add-cursor-on-click)
+     ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+     :map mc/keymap
+     ("C-|" . mc/vertical-align-with-space)))
 
 ;; Smartly select region, rectangle, multi cursors
 (use-package smart-region
@@ -223,10 +227,10 @@
   :diminish
   :if (executable-find "aspell")
   :hook (((text-mode outline-mode) . flyspell-mode)
-         (prog-mode . flyspell-prog-mode)
-         (flyspell-mode . (lambda ()
-                            (dolist (key '("C-;" "C-," "C-."))
-                              (unbind-key key flyspell-mode-map)))))
+     (prog-mode . flyspell-prog-mode)
+     (flyspell-mode . (lambda ()
+                (dolist (key '("C-;" "C-," "C-."))
+                  (unbind-key key flyspell-mode-map)))))
   :init
   (setq flyspell-issue-message-flag nil)
   (setq ispell-program-name "aspell")
@@ -249,7 +253,7 @@
 ;; Move to the beginning/end of line or code
 (use-package mwim
   :bind (([remap move-beginning-of-line] . mwim-beginning-of-code-or-line)
-         ([remap move-end-of-line] . mwim-end-of-code-or-line)))
+     ([remap move-end-of-line] . mwim-end-of-code-or-line)))
 
 ;; Treat undo history as a tree
 (use-package undo-tree
@@ -291,37 +295,7 @@
   :hook ((prog-mode . subword-mode)
          (minibuffer-setup . subword-mode)))
 
-(use-package origami
-  :hook (prog-mode . origami-mode)
-  :init (setq origami-show-fold-header t)
-  :bind (:map origami-mode-map
-              ("C-`" . hydra-origami/body))
-  :config
-  (face-spec-reset-face 'origami-fold-header-face)
 
-  (when centaur-lsp
-    ;; Support LSP
-    (use-package lsp-origami
-      :hook (origami-mode . (lambda ()
-                              (if lsp-mode
-                                  (lsp-origami-mode))))))
-
-  (defhydra hydra-origami (:color blue :hint none)
-    "
-^Node^                     ^Other^
-^^─────────────────────────^^────────────
-_:_: toggle recursively    _u_: undo
-_a_: toggle all            _r_: redo
-_t_: toggle current        _R_: reset
-_o_: only show current
-"
-    (":" origami-recursively-toggle-node)
-    ("a" origami-toggle-all-nodes)
-    ("t" origami-toggle-node)
-    ("o" origami-show-only-node)
-    ("u" origami-undo)
-    ("r" origami-redo)
-    ("R" origami-reset)))
 (defun bjm/kill-this-buffer()
   "Kill the current buffer."
   (interactive)
