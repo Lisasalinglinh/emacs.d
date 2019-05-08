@@ -50,6 +50,7 @@
          ([remap dired] . counsel-dired)
          ("C-x C-r" . counsel-recentf)
          ("C-x j" . counsel-mark-ring)
+         ("C-h F" . counsel-describe-face)
          ("C-c c L" . counsel-load-library)
          ("C-c c P" . counsel-package)
          ("C-c c a" . counsel-apropos)
@@ -103,18 +104,18 @@
           (counsel-ack . ivy--regex-plus)
           (counsel-grep . ivy--regex-plus)
           (t . ivy--regex-fuzzy)))
-  ;; For alignment `tab-width' must be 1 in minibuffer
+
   (defun my-ivy-format-function-arrow (cands)
     "Transform CANDS into a string for minibuffer."
     (ivy--format-function-generic
      (lambda (str)
        (concat (if (display-graphic-p)
-                   (all-the-icons-octicon "chevron-right" :height 0.8 :v-adjust -0.05)
+                   (all-the-icons-octicon "chevron-right" :height 0.8 :v-adjust -0.05 :face 'all-the-icons-lgreen)
                  ">")
-               "\t"
+               (propertize " " 'display `(space :align-to 2))
                (ivy--add-face str 'ivy-current-match)))
      (lambda (str)
-       (concat "\t\t" str))
+       (concat  (propertize " " 'display `(space :align-to 2))  str))
      cands
      "\n"))
   (setq ivy-format-function 'my-ivy-format-function-arrow)

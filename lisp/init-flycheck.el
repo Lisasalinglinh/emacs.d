@@ -41,7 +41,10 @@
   (setq flycheck-indication-mode 'right-fringe)
   (setq flycheck-emacs-lisp-load-path 'inherit)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-
+  (add-hook 'c++-mode-hook
+            (lambda () (setq flycheck-gcc-include-path
+                        (list (expand-file-name "/usr/include/c++/7/")))))
+  (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
   ;; Only check while saving and opening files
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
 
