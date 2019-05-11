@@ -40,16 +40,16 @@
 (setq file-name-handler-alist nil)
 (setq gc-cons-threshold 80000000)
 (add-hook 'emacs-startup-hook
-	  (lambda ()
-	    "Restore defalut values after init."
-	    (setq file-name-handler-alist default-file-name-handler-alist)
-	    (setq gc-cons-threshold 800000)
-	    (if (boundp 'after-focus-change-function)
-		(add-function :after after-focus-change-function
-			      (lambda ()
-				(unless (frame-focus-state)
-				  (garbage-collect))))
-	      (add-hook 'focus-out-hook 'garbage-collect))))
+      (lambda ()
+        "Restore defalut values after init."
+        (setq file-name-handler-alist default-file-name-handler-alist)
+        (setq gc-cons-threshold 800000)
+        (if (boundp 'after-focus-change-function)
+        (add-function :after after-focus-change-function
+                  (lambda ()
+                (unless (frame-focus-state)
+                  (garbage-collect))))
+          (add-hook 'focus-out-hook 'garbage-collect))))
 
 ;; Load path
 ;; Optimize: Force "lisp"" and "site-lisp" at the head to reduce the startup time.
@@ -62,7 +62,7 @@
 (defun add-subdirs-to-load-path (&rest _)
   "Add subdirectories to `load-path'."
   (let ((default-directory
-	  (expand-file-name "site-lisp" user-emacs-directory)))
+      (expand-file-name "site-lisp" user-emacs-directory)))
     (normal-top-level-add-subdirs-to-load-path)))
 
 (advice-add #'package-initialize :after #'update-load-path)
@@ -104,7 +104,7 @@
 (require 'init-emacs-lisp)
 (require 'init-cmake)
 
-(require 'init-c)
+;; (require 'init-c)
 (require 'init-prog)
 
 (require 'init-eww)

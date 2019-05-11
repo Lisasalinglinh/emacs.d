@@ -154,8 +154,10 @@
            (setq unread-command-events
                  (append unread-command-events
                          (listify-key-sequence (kbd "M-p")))))
-          ((or (memq this-command '(self-insert-command))
-               (memq this-command '(ivy-yank-word)))
+          ((memq this-command '(self-insert-command
+                                yank
+                                ivy-yank-word
+                                counsel-yank-pop))
            (delete-region (point)
                           (point-max)))))
 
@@ -483,7 +485,21 @@
            ((ivy-rich-file-icon)
             (ivy-rich-candidate))
            :delimiter "\t"))))
-
+(use-package ivy-posframe
+  :init(ivy-posframe-enable)
+  :config
+  (setq ivy-display-function #'ivy-posframe-display-at-point)
+  (push '(counsel-M-x . ivy-posframe-display-at-window-bottom-left) ivy-display-functions-alist)
+  (push '(complete-symbol . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(ivy-switch-buffer . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(counsel-find-file . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(swiper-isearch . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(counsel-recentf . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(counsel-grep . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(counsel-yank-pop . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (setq ivy-posframe-parameters
+        '((left-fringe . 8)
+          (right-fringe . 8))))
 (provide 'init-ivy)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

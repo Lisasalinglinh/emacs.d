@@ -42,6 +42,7 @@
   :bind (:map c-mode-base-map
               ("C-c c" . compile))
   :config
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (use-package modern-cpp-font-lock
     :diminish
     :init (modern-c++-font-lock-global-mode t))
