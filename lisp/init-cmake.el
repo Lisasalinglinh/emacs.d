@@ -159,7 +159,10 @@ _D_: diagnostics                  _R_: rename symbol               ___: asm file
 (use-package flycheck-color-mode-line
   :after flycheck
   :config '(add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
-
+(use-package cmake-font-lock
+  :config
+  (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
+  (add-hook 'cmake-mode-hook 'cmake-font-lock-activate))
 ;; Flycheck rtags.
 (use-package flycheck-rtags
   :after rtags

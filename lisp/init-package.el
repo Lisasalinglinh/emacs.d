@@ -3,7 +3,6 @@
 ;; Copyright (C) 2019 Vincent Zhang
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; URL: https://github.com/seagle0128/.emacs.d
 
 ;; This file is not part of GNU Emacs.
 ;;
@@ -101,16 +100,16 @@
 (use-package diminish)
 (use-package bind-key)
 
-;; Initialization benchmark
-(when centaur-benchmark
-  (use-package benchmark-init
-    :defines swiper-font-lock-exclude
-    :commands (benchmark-init/activate)
-    :hook (after-init . benchmark-init/deactivate)
-    :init (benchmark-init/activate)
-    :config
-    (with-eval-after-load 'swiper
-      (add-to-list 'swiper-font-lock-exclude 'benchmark-init/tree-mode))))
+;; ;; Initialization benchmark
+;; (when centaur-benchmark
+;;   (use-package benchmark-init
+;;     :defines swiper-font-lock-exclude
+;;     :commands (benchmark-init/activate)
+;;     :hook (after-init . benchmark-init/deactivate)
+;;     :init (benchmark-init/activate)
+;;     :config
+;;     (with-eval-after-load 'swiper
+;;       (add-to-list 'swiper-font-lock-exclude 'benchmark-init/tree-mode))))
 
 ;; Extensions
 (use-package paradox
@@ -118,7 +117,7 @@
   (setq paradox-execute-asynchronously t)
   (setq paradox-github-token t)
   (setq paradox-display-star-count nil)
-  (setq paradox-github-token  "a395c1cba60dcd145171fb6870f5550a3941e4b0") 
+  (setq paradox-github-token  "a395c1cba60dcd145171fb6870f5550a3941e4b0")
   (defalias #'upgrade-packages #'paradox-upgrade-packages)
 
   ;; Replace default `list-packages'

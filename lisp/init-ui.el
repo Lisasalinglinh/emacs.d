@@ -34,14 +34,6 @@
   (require 'init-const)
   (require 'init-custom))
 
-;; Title
-(setq frame-title-format
-      '("Centaur Emacs - "
-        (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
-(setq icon-title-format frame-title-format)
-
 ;; Menu/Tool/Scroll bars
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -60,26 +52,19 @@
 ;; Mode-line
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
-  :init (setq doom-modeline-github t)
-  :config
-  (setq
-   doom-modeline-buffer-file-name-style 'truncate-upto-project
-   doom-modeline-enable-word-count t
-   doom-modeline-checker-simple-format t
-   doom-modeline-github t
-   doom-modeline-github-interval (* 30 60)))
-
-(defun mode-line-height ()
-  "Get current height of mode-line."
-  (- (elt (window-pixel-edges) 3)
-     (elt (window-inside-pixel-edges) 3)))
+  :init
+  (unless after-init-time
+    ;; prevent flash of unstyled modeline at startup
+    (setq-default mode-line-format nil))
+  (setq doom-modeline-major-mode-color-icon t
+        doom-modeline-minor-modes nil
+        doom-modeline--battery-status t
+        doom-modeline-mu4e nil
+        doom-modeline-github t))
 
 (use-package hide-mode-line
-  :hook (((completion-list-mode
-           completion-in-region-mode
-           neotree-mode
-           treemacs-mode)
-          . hide-mode-line-mode)))
+  :hook (((completion-list-mode completion-in-region-mode) . hide-mode-line-mode)))
+
 (use-package posframe)
 ;; Icons
 ;; NOTE: Must run `M-x all-the-icons-install-fonts' manually on Windows
@@ -97,6 +82,8 @@
   (unless (or sys/win32p (member "all-the-icons" (font-family-list)))
     (all-the-icons-install-fonts t))
   :config
+  (add-to-list 'all-the-icons-icon-alist
+               '("\\.xpm$" all-the-icons-octicon "file-media" :v-adjust 0.0 :face all-the-icons-dgreen))
   (add-to-list 'all-the-icons-mode-icon-alist
                '(help-mode all-the-icons-faicon "info-circle" :height 1.1 :v-adjust -0.1 :face all-the-icons-purple))
   (add-to-list 'all-the-icons-mode-icon-alist
@@ -123,7 +110,7 @@
                '(gfm-mode  all-the-icons-octicon "markdown" :face all-the-icons-blue)))
 
 ;; Line and Column
-(setq-default fill-column 80)
+(setq-default fill-column 120)
 (setq column-number-mode t)
 (setq line-number-mode t)
 
@@ -159,7 +146,25 @@
 (setq scroll-step 1
       scroll-margin 0
       scroll-conservatively 100000)
+;; Display Time
+(use-package time
+  :ensure nil
+  :unless (display-graphic-p)
+  :hook (after-init . display-time-mode)
+  :init
+  (setq display-time-24hr-format t
+        display-time-day-and-date t))
+;; Suppress GUI features
+(setq use-file-dialog nil
+      use-dialog-box nil
+      inhibit-startup-screen t
+      inhibit-startup-echo-area-message t)
 
+;; Display dividers between windows
+(setq window-divider-default-places t
+      window-divider-default-bottom-width 1
+      window-divider-default-right-width 1)
+(add-hook 'window-setup-hook #'window-divider-mode)
 ;; Misc
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq inhibit-startup-screen t)

@@ -32,12 +32,24 @@
 
 (eval-when-compile
   (require 'init-const))
+;; Visualize TAB, (HARD) SPACE, NEWLINE
+(setq-default show-trailing-whitespace nil)
+(dolist (hook '(prog-mode-hook outline-mode-hook conf-mode-hook))
+  (add-hook hook (lambda ()
+                   (setq show-trailing-whitespace t)
+                   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))))
 
 ;; Highlight the current line
 (use-package hl-line
   :ensure nil
   :hook (after-init . global-hl-line-mode))
-
+                                        ; Highlight matching parens
+(use-package paren
+  :ensure nil
+  :hook (after-init . show-paren-mode)
+  :config
+  (setq show-paren-when-point-inside-paren t)
+  (setq show-paren-when-point-in-periphery t))
 ;; Highlight symbols
 (use-package symbol-overlay
   :diminish
@@ -62,26 +74,27 @@
          (iedit-mode . (lambda () (symbol-overlay-mode -1)))
          (iedit-mode-end . symbol-overlay-mode)))
 
-;; Highlight matching parens
-(use-package paren
-  :ensure nil
-  :hook (after-init . show-paren-mode)
-  :config
-  (setq show-paren-when-point-inside-paren t)
-  (setq show-paren-when-point-in-periphery t))
-
 ;; Highlight indentions
 (when (display-graphic-p)
   (use-package highlight-indent-guides
     :diminish
-    :hook (prog-mode . (lambda ()
-                         ;; WORKAROUND:Fix the issue of not displaying plots
-                         ;; @see https://github.com/DarthFennec/highlight-indent-guides/issues/55
-                         (unless (eq major-mode 'ein:notebook-multilang-mode)
-                           (highlight-indent-guides-mode 1))))
+    ;; :hook (prog-mode . highlight-indent-guides-mode)
+    :init
+    (defun toggle-highlight-indent ()
+      "Highlight indention in buffers or not."
+      (interactive)
+      (highlight-indent-guides-mode
+       (or (and highlight-indent-guides-mode -1) 1)))
+    (defalias #'centaur-toggle-highlight-indent #'toggle-highlight-indent)
     :config
     (setq highlight-indent-guides-method 'character)
     (setq highlight-indent-guides-responsive 'top)
+
+    ;; Don't display first level of indentation
+    (defun my-indent-guides-for-all-but-first-column (level responsive display)
+      (unless (< level 1)
+        (highlight-indent-guides--highlighter-default level responsive display)))
+    (setq highlight-indent-guides-highlighter-function #'my-indent-guides-for-all-but-first-column)
 
     ;; Disable `highlight-indent-guides-mode' in `swiper'
     ;; https://github.com/DarthFennec/highlight-indent-guides/issues/40
@@ -98,7 +111,13 @@
 ;; Colorize color names in buffers
 (use-package rainbow-mode
   :diminish
-  :hook (prog-mode . rainbow-mode)
+  :hook ((css-mode js-mode js2-mode html-mode web-mode) . rainbow-mode)
+  :init
+  (defun toggle-rainbow ()
+    "Colorize color names in buffers or not."
+    (interactive)
+    (rainbow-mode (or (and rainbow-mode -1) 1)))
+  (defalias #'centaur-toggle-rainbow #'toggle-rainbow)
   :config
   ;; HACK: Use overlay instead of text properties to override `hl-line' faces.
   ;; @see https://emacs.stackexchange.com/questions/36420
@@ -175,38 +194,6 @@
   :diminish
   :hook (after-init . volatile-highlights-mode))
 
-;; Visualize TAB, (HARD) SPACE, NEWLINE
-(use-package whitespace
-  :ensure nil
-  :diminish
-  :hook ((prog-mode outline-mode conf-mode) . whitespace-mode)
-  :config
-  (setq whitespace-line-column fill-column) ;; limit line length
-  ;; automatically clean up bad whitespace
-  (setq whitespace-action '(auto-cleanup))
-  ;; only show bad whitespace
-  (setq whitespace-style '(face
-                           trailing space-before-tab
-                           indentation empty space-after-tab))
-
-  (with-eval-after-load 'popup
-    ;; advice for whitespace-mode conflict with popup
-    (defvar my-prev-whitespace-mode nil)
-    (make-local-variable 'my-prev-whitespace-mode)
-
-    (defadvice popup-draw (before my-turn-off-whitespace activate compile)
-      "Turn off whitespace mode before showing autocomplete box."
-      (if whitespace-mode
-          (progn
-            (setq my-prev-whitespace-mode t)
-            (whitespace-mode -1))
-        (setq my-prev-whitespace-mode nil)))
-
-    (defadvice popup-delete (after my-restore-whitespace activate compile)
-      "Restore previous whitespace mode when deleting autocomplete box."
-      (if my-prev-whitespace-mode
-          (whitespace-mode 1)))))
-
 ;; Pulse current line
 (use-package pulse
   :ensure nil
@@ -241,6 +228,13 @@
                  pager-page-down pager-page-up
                  symbol-overlay-basic-jump))
     (advice-add cmd :after #'my-pulse-momentary-line))
+  (with-no-warnings
+    (if (boundp 'after-focus-change-function)
+        (add-function :after after-focus-change-function
+                      (lambda ()
+                        (when (frame-focus-state)
+                          (my-pulse-momentary-line))))
+      (add-hook 'focus-in-hook #'my-pulse-momentary-line t)))
   (dolist (cmd '(pop-to-mark-command
                  pop-global-mark
                  goto-last-change))

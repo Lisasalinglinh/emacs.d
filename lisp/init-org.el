@@ -37,6 +37,8 @@
   :ensure t
   :commands org-try-structure-completion
   :functions hydra-org-template/body
+  :custom-face
+  (org-ellipsis ((t (:foreground nil))))
   :bind (("C-c a" . org-agenda)
          ("C-c b" . org-switchb))
   :hook
@@ -47,6 +49,7 @@
   (setq org-agenda-files '("~/org")
         org-todo-keywords '((sequence "TODO(T)" "DOING(I)" "HANGUP(H)" "|" "DONE(D)" "CANCEL(C)"))
         org-log-done 'time
+        org-catch-invisible-edits 'smart
         org-startup-indented t
         org-ascii-headline-spacing (quote (1 . 1))
         org-pretty-entities t

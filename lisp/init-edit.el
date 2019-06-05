@@ -123,27 +123,31 @@
 (use-package aggressive-indent
   :diminish
   :hook ((after-init . global-aggressive-indent-mode)
-     ;; FIXME: Disable in big files due to the performance issues
-     ;; https://github.com/Malabarba/aggressive-indent-mode/issues/73
-     (find-file . (lambda ()
-            (if (> (buffer-size) (* 3000 80))
-                (aggressive-indent-mode -1)))))
+         ;; FIXME: Disable in big files due to the performance issues
+         ;; https://github.com/Malabarba/aggressive-indent-mode/issues/73
+         (find-file . (lambda ()
+                        (if (> (buffer-size) (* 3000 80))
+                            (aggressive-indent-mode -1)))))
   :config
   ;; Disable in some modes
   (dolist (mode '(asm-mode web-mode html-mode css-mode robot-mode go-mode))
     (push mode aggressive-indent-excluded-modes))
+  ;; Disable in some commands
+  (add-to-list 'aggressive-indent-protected-commands #'delete-trailing-whitespace t)
+
+
 
   ;; Be slightly less aggressive in C/C++/C#/Java/Go/Swift
   (add-to-list
    'aggressive-indent-dont-indent-if
    '(and (or (derived-mode-p 'c-mode)
-         (derived-mode-p 'c++-mode)
-         (derived-mode-p 'csharp-mode)
-         (derived-mode-p 'java-mode)
-         (derived-mode-p 'go-mode)
-         (derived-mode-p 'swift-mode))
-     (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
-                 (thing-at-point 'line))))))
+             (derived-mode-p 'c++-mode)
+             (derived-mode-p 'csharp-mode)
+             (derived-mode-p 'java-mode)
+             (derived-mode-p 'go-mode)
+             (derived-mode-p 'swift-mode))
+         (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
+                             (thing-at-point 'line))))))
 
 ;; Show number of matches in mode-line while searching
 (use-package anzu
@@ -227,7 +231,7 @@
   :diminish
   :if (executable-find "aspell")
   :hook (((text-mode outline-mode) . flyspell-mode)
-     (prog-mode . flyspell-prog-mode)
+     ;; (prog-mode . flyspell-prog-mode)
      (flyspell-mode . (lambda ()
                 (dolist (key '("C-;" "C-," "C-."))
                   (unbind-key key flyspell-mode-map)))))
@@ -266,24 +270,8 @@
               undo-tree-history-directory-alist
               `(("." . ,(concat user-emacs-directory "undo-tree-hist/"))))
   :config
-  ;; FIXME:  `undo-tree-visualizer-diff' is a local variable in *undo-tree* buffer.
-  (defun undo-tree-visualizer-show-diff (&optional node)
-    ;; show visualizer diff display
-    (setq-local undo-tree-visualizer-diff t)
-    (let ((buff (with-current-buffer undo-tree-visualizer-parent-buffer
-                  (undo-tree-diff node)))
-          (display-buffer-mark-dedicated 'soft)
-          win)
-      (setq win (split-window))
-      (set-window-buffer win buff)
-      (shrink-window-if-larger-than-buffer win)))
-
-  (defun undo-tree-visualizer-hide-diff ()
-    ;; hide visualizer diff display
-    (setq-local undo-tree-visualizer-diff nil)
-    (let ((win (get-buffer-window undo-tree-diff-buffer-name)))
-      (when win (with-selected-window win (kill-buffer-and-window))))))
-
+  ;; FIXME:  keep the diff window
+  (make-variable-buffer-local 'undo-tree-visualizer-diff))
 ;; Goto last change
 (use-package goto-chg
   :bind ("C-," . goto-last-change))
@@ -294,6 +282,9 @@
   :diminish
   :hook ((prog-mode . subword-mode)
          (minibuffer-setup . subword-mode)))
+;; Open files as another user
+(unless sys/win32p
+  (use-package sudo-edit))
 
 
 (defun bjm/kill-this-buffer()

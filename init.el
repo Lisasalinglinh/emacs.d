@@ -93,8 +93,8 @@
 (require 'init-window)
 (require 'init-eshell)
 (require 'init-shell)
+
 (require 'init-org)
-(require 'init-elfeed)
 (require 'init-utils)
 
 (require 'init-vcs)
@@ -104,7 +104,7 @@
 (require 'init-emacs-lisp)
 (require 'init-cmake)
 
-;; (require 'init-c)
+(require 'init-c)
 (require 'init-prog)
 
 (require 'init-eww)

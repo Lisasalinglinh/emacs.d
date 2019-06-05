@@ -35,7 +35,7 @@
 
 (use-package counsel
   :diminish ivy-mode counsel-mode
-  :defines (projectile-completion-system magit-completing-read-function)
+  :defines (projectile-completion-system magit-completing-read-function recentf-list)
   :commands swiper-isearch
   :bind (("C-s" . swiper-isearch)
          ("C-S-s" . swiper-all)
@@ -94,16 +94,7 @@
   (setq ivy-on-del-error-function nil)
   ;; (setq ivy-format-function 'ivy-format-function-arrow)
   (setq ivy-initial-inputs-alist nil)
-  (setq ivy-re-builders-alist
-        '((swiper . ivy--regex-plus)
-          (swiper-all . ivy--regex-plus)
-          (swiper-isearch . ivy--regex-plus)
-          (counsel-ag . ivy--regex-plus)
-          (counsel-rg . ivy--regex-plus)
-          (counsel-pt . ivy--regex-plus)
-          (counsel-ack . ivy--regex-plus)
-          (counsel-grep . ivy--regex-plus)
-          (t . ivy--regex-fuzzy)))
+
 
   (defun my-ivy-format-function-arrow (cands)
     "Transform CANDS into a string for minibuffer."
@@ -132,6 +123,19 @@
                    (t counsel-grep-base-command))))
     (setq counsel-grep-base-command cmd))
 
+  ;; Build abbreviated recent file list.
+  (defun my-counsel-recentf ()
+    "Find a file on `recentf-list'."
+    (interactive)
+    (require 'recentf)
+    (recentf-mode)
+    (ivy-read "Recentf: " (mapcar #'abbreviate-file-name recentf-list)
+              :action (lambda (f)
+                        (with-ivy-window
+                          (find-file f)))
+              :require-match t
+              :caller 'counsel-recentf))
+  (advice-add #'counsel-recentf :override #'my-counsel-recentf)
 
   ;; Pre-fill for commands
   ;; @see https://www.reddit.com/r/emacs/comments/b7g1px/withemacs_execute_commands_like_marty_mcfly/
@@ -209,11 +213,22 @@
   (with-eval-after-load 'magit
     (setq magit-completing-read-function 'ivy-completing-read))
 
-  ;; Enhance fuzzy matching
-  (use-package flx)
-
   ;; Enhance M-x
-  (use-package amx)
+  (use-package amx
+    :init (setq amx-history-length 20))
+  ;; Enhance fuzzy matching
+  (use-package flx
+    :config (setq ivy-re-builders-alist
+                  '((swiper . ivy--regex-plus)
+                    (swiper-all . ivy--regex-plus)
+                    (swiper-isearch . ivy--regex-plus)
+                    (counsel-ag . ivy--regex-plus)
+                    (counsel-rg . ivy--regex-plus)
+                    (counsel-pt . ivy--regex-plus)
+                    (counsel-ack . ivy--regex-plus)
+                    (counsel-grep . ivy--regex-plus)
+                    (t . ivy--regex-fuzzy))))
+
 
   ;; Additional key bindings for Ivy
   (use-package ivy-hydra

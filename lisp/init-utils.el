@@ -181,37 +181,16 @@
     (if (fboundp 'olivetti-mode) (olivetti-mode 1)))
   :hook (nov-mode . my-nov-setup))
 
-;; Edit text for browsers with GhostText or AtomicChrome extension
-(use-package atomic-chrome
-  :hook ((emacs-startup . atomic-chrome-start-server)
-         (atomic-chrome-edit-mode . delete-other-windows))
-  :init (setq atomic-chrome-buffer-open-style 'frame)
-  :config
-  (if (fboundp 'gfm-mode)
-      (setq atomic-chrome-url-major-mode-alist
-            '(("github\\.com" . gfm-mode)))))
+;; ;; Edit text for browsers with GhostText or AtomicChrome extension
+;; (use-package atomic-chrome
+;;   :hook ((emacs-startup . atomic-chrome-start-server)
+;;          (atomic-chrome-edit-mode . delete-other-windows))
+;;   :init (setq atomic-chrome-buffer-open-style 'frame)
+;;   :config
+;;   (if (fboundp 'gfm-mode)
+;;       (setq atomic-chrome-url-major-mode-alist
+;;             '(("github\\.com" . gfm-mode)))))
 
-;; Open files as another user
-(unless sys/win32p
-  (use-package sudo-edit))
-
-;; Discover key bindings and their meaning for the current Emacs major mode
-(use-package discover-my-major
-  :bind (("C-h M-m" . discover-my-major)
-         ("C-h M-M" . discover-my-mode)))
-
-;; A Simmple and cool pomodoro timer
-(use-package pomidor
-  :bind ("<f12>" . pomidor)
-  :init (setq alert-default-style (if sys/macp 'osx-notifier 'libnotify))
-  :config
-  (when sys/macp
-    (setq pomidor-play-sound-file
-          (lambda (file)
-            (start-process "my-pomidor-play-sound"
-                           nil
-                           "afplay"
-                           file)))))
 
 ;; Misc
 (use-package copyit)                    ; copy path, url, etc.
