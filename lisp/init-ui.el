@@ -40,16 +40,13 @@
 (scroll-bar-mode -1)
 
 (use-package doom-themes
-  :init (load-theme 'doom-molokai t)
+  :init (load-theme 'doom-dracula t)
   :config
-  ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
-  ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config)
-  ;; Enable custom treemacs theme (all-the-icons must be installed!)
   (doom-themes-treemacs-config))
 
-;; Mode-line
+;;Mode-line
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
   :init
@@ -60,7 +57,8 @@
         doom-modeline-minor-modes nil
         doom-modeline--battery-status t
         doom-modeline-mu4e nil
-        doom-modeline-github t))
+        doom-modeline-github t
+        doom-modeline-github-interval 300))
 
 (use-package hide-mode-line
   :hook (((completion-list-mode completion-in-region-mode) . hide-mode-line-mode)))

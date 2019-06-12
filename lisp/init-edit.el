@@ -65,11 +65,6 @@
   :ensure nil
   :hook (after-init . delete-selection-mode))
 
-;; Rectangle
-(use-package rect
-  :ensure nil
-  :bind (("<C-return>" . rectangle-mark-mode)))
-
 ;; Automatically reload files was modified by external program
 (use-package autorevert
   :ensure nil
@@ -93,22 +88,7 @@
 (use-package goto-addr
   :ensure nil
   :hook ((text-mode . goto-address-mode)
-     (prog-mode . goto-address-prog-mode)))
-
-;; Jump to things in Emacs tree-style
-(use-package avy
-  :bind (("C-:" . avy-goto-char-2)
-     ("C-'" . avy-goto-char-2)
-     ("M-g f" . avy-goto-line)
-     ("M-g w" . avy-goto-word-1)
-     ("M-g e" . avy-goto-word-0))
-  :hook (after-init . avy-setup-default)
-  :config (setq avy-background t))
-
-;; Kill text between the point and the character CHAR
-(use-package avy-zap
-  :bind (("M-z" . avy-zap-to-char-dwim)
-     ("M-Z" . avy-zap-up-to-char-dwim)))
+         (prog-mode . goto-address-prog-mode)))
 
 ;; Quickly follow links
 (use-package ace-link
@@ -134,9 +114,6 @@
     (push mode aggressive-indent-excluded-modes))
   ;; Disable in some commands
   (add-to-list 'aggressive-indent-protected-commands #'delete-trailing-whitespace t)
-
-
-
   ;; Be slightly less aggressive in C/C++/C#/Java/Go/Swift
   (add-to-list
    'aggressive-indent-dont-indent-if
@@ -190,36 +167,196 @@
   :hook (after-init . electric-pair-mode)
   :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
 
+(use-package multiple-cursors
+  :functions hydra-multiple-cursors
+  :bind
+  ("M-u" . hydra-multiple-cursors/body)
+  :preface
+  ;; insert specific serial number
+  (defvar ladicle/mc/insert-numbers-hist nil)
+  (defvar ladicle/mc/insert-numbers-inc 1)
+  (defvar ladicle/mc/insert-numbers-pad "%01d")
+
+  (defun ladicle/mc/insert-numbers (start inc pad)
+    "Insert increasing numbers for each cursor specifically."
+    (interactive
+     (list (read-number "Start from: " 0)
+           (read-number "Increment by: " 1)
+           (read-string "Padding (%01d): " nil ladicle/mc/insert-numbers-hist "%01d")))
+    (setq mc--insert-numbers-number start)
+    (setq ladicle/mc/insert-numbers-inc inc)
+    (setq ladicle/mc/insert-numbers-pad pad)
+    (mc/for-each-cursor-ordered
+     (mc/execute-command-for-fake-cursor
+      'ladicle/mc--insert-number-and-increase
+      cursor)))
+
+  (defun ladicle/mc--insert-number-and-increase ()
+    (interactive)
+    (insert (format ladicle/mc/insert-numbers-pad mc--insert-numbers-number))
+    (setq mc--insert-numbers-number (+ mc--insert-numbers-number ladicle/mc/insert-numbers-inc)))
+
+  :config
+  (with-eval-after-load 'hydra
+    (defhydra hydra-multiple-cursors (:color pink :hint nil)
+      "
+                                                                        ╔════════╗
+    Point^^^^^^             Misc^^            Insert                            ║ Cursor ║
+  ──────────────────────────────────────────────────────────────────────╨────────╜
+     _k_    _K_    _M-k_    [_l_] edit lines  [_i_] 0...
+     ^↑^    ^↑^     ^↑^     [_m_] mark all    [_a_] letters
+    mark^^ skip^^^ un-mk^   [_s_] sort        [_n_] numbers
+     ^↓^    ^↓^     ^↓^
+     _j_    _J_    _M-j_
+  ╭──────────────────────────────────────────────────────────────────────────────╯
+                           [_q_]: quit, [Click]: point
+"
+      ("l" mc/edit-lines :exit t)
+      ("m" mc/mark-all-like-this :exit t)
+      ("j" mc/mark-next-like-this)
+      ("J" mc/skip-to-next-like-this)
+      ("M-j" mc/unmark-next-like-this)
+      ("k" mc/mark-previous-like-this)
+      ("K" mc/skip-to-previous-like-this)
+      ("M-k" mc/unmark-previous-like-this)
+      ("s" mc/mark-all-in-region-regexp :exit t)
+      ("i" mc/insert-numbers :exit t)
+      ("a" mc/insert-letters :exit t)
+      ("n" ladicle/mc/insert-numbers :exit t)
+      ("<mouse-1>" mc/add-cursor-on-click)
+      ;; Help with click recognition in this hydra
+      ("<down-mouse-1>" ignore)
+      ("<drag-mouse-1>" ignore)
+      ("q" nil))))
+
+(use-package avy
+  :functions (hydra-avy hydra-viewer)
+  :bind
+  ("C-'"   . avy-resume)
+  ("C-:"   . avy-goto-char-2-below)
+  ("C-;"   . avy-goto-char)
+  ("M-j"   . hydra-avy/body)
+  ("C-M-v" . hydra-viewer/body)
+  :preface
+  ;; fixed cursor scroll-up
+  (defun scroll-up-in-place (n)
+    (interactive "p")
+    (forward-line (- n))
+    (scroll-down n))
+  ;; fixed cursor scroll-down
+  (defun scroll-down-in-place (n)
+    (interactive "p")
+    (forward-line n)
+    (scroll-up n))
+  ;; yank inner sexp
+  (defun yank-inner-sexp ()
+    (interactive)
+    (backward-list)
+    (mark-sexp)
+    (copy-region-as-kill (region-beginning) (region-end)))
+  :config
+  (when (eq system-type 'darwin)
+    (progn
+      (global-set-key (kbd "C-:") 'avy-goto-char)
+      (global-set-key (kbd "C-;") 'avy-goto-char-2-below)))
+
+  (use-package avy-zap
+    :bind
+    ("M-z" . avy-zap-to-char-dwim)
+    ("M-z" . avy-zap-up-to-char-dwim))
+
+  (with-eval-after-load 'hydra
+    (defhydra hydra-viewer (:color pink :hint nil)
+      "
+                                                                        ╔════════╗
+   Char/Line^^^^^^  Word/Page^^^^^^^^  Line/Buff^^^^   Paren                              ║ Window ║
+  ──────────────────────────────────────────────────────────────────────╨────────╜
+       ^^_k_^^          ^^_u_^^          ^^_g_^^       _(_ ← _y_ → _)_
+       ^^^↑^^^          ^^^↑^^^          ^^^↑^^^       _,_ ← _/_ → _._
+   _h_ ← _d_ → _l_  _H_ ← _D_ → _L_  _a_ ← _K_ → _e_
+       ^^^↓^^^          ^^^↓^^^          ^^^↓^
+       ^^_j_^^          ^^_n_^^          ^^_G_
+  ╭──────────────────────────────────────────────────────────────────────────────╯
+                           [_q_]: quit, [_<SPC>_]: center
+          "
+      ("j" scroll-down-in-place)
+      ("k" scroll-up-in-place)
+      ("l" forward-char)
+      ("d" delete-char)
+      ("h" backward-char)
+      ("L" forward-word)
+      ("H" backward-word)
+      ("u" scroll-up-command)
+      ("n" scroll-down-command)
+      ("D" delete-word-at-point)
+      ("a" mwim-beginning-of-code-or-line)
+      ("e" mwim-end-of-code-or-line)
+      ("g" beginning-of-buffer)
+      ("G" end-of-buffer)
+      ("K" kill-whole-line)
+      ("(" backward-list)
+      (")" forward-list)
+      ("y" yank-inner-sexp)
+      ("." backward-forward-next-location)
+      ("," backward-forward-previous-location)
+      ("/" avy-goto-char :exit t)
+      ("<SPC>" recenter-top-bottom)
+      ("q" nil))
+
+    (defhydra hydra-avy (:color pink :hint nil)
+      "
+                                                                        ╔════════╗
+        ^^Goto^^        Kill^^        Yank^^        Move^^        Misc            ║  Jump  ║
+  ──────────────────────────────────────────────────────────────────────╨────────╜
+    _c_ ← char^^        [_k_] region  [_y_] region  [_m_] region  [_n_] line number
+    _a_ ← char2 → _b_   [_K_] line    [_Y_] line    [_M_] line    [_v_] Goto viewer
+    _w_ ← word  → _W_   [_z_] zap^^^^                             [_o_] Goto clock
+    _l_ ← line  → _e_   ^^^^^                                     _,_ ← f!y → _._
+  ╭──────────────────────────────────────────────────────────────────────────────╯
+                      [_q_]: quit, [_i_]: imenu, [_<SPC>_]: resume
+"
+      ("c" avy-goto-char :exit t)
+      ("a" avy-goto-char-2 :exit t)
+      ("b" avy-goto-char-below :exit t)
+      ("w" avy-goto-word-1 :exit t)
+      ("W" avy-goto-word-1-below :exit t)
+      ("l" avy-goto-line :exit t)
+      ("e" avy-goto-end-of-line :exit t)
+      ("M" avy-move-line)
+      ("m" avy-move-region)
+      ("K" avy-kill-whole-line)
+      ("k" avy-kill-region)
+      ("Y" avy-copy-line :exit t)
+      ("y" avy-copy-region :exit t)
+      ("n" goto-line :exit t)
+      ("o" org-clock-jump-to-current-clock :exit t)
+      ("z" avy-zap-to-char-dwim :exit t)
+      ("v" hydra-viewer/body :exit t)
+      ("<SPC>" avy-resume :exit t)
+      ("o" org-clock-jump-to-current-clock :exit t)
+      ("i" counsel-imenu :exit t)
+      ("," flymake-goto-previous-error)
+      ("." flymake-goto-next-error)
+      ("q" nil))))
+
 ;; Edit multiple regions in the same way simultaneously
 (use-package iedit
   :defines desktop-minor-mode-table
   :bind (("C-;" . iedit-mode)
-     ("C-x r RET" . iedit-rectangle-mode)
-     :map isearch-mode-map ("C-;" . iedit-mode-from-isearch)
-     :map esc-map ("C-;" . iedit-execute-last-modification)
-     :map help-map ("C-;" . iedit-mode-toggle-on-function))
+         ("C-x r RET" . iedit-rectangle-mode)
+         :map isearch-mode-map ("C-;" . iedit-mode-from-isearch)
+         :map esc-map ("C-;" . iedit-execute-last-modification)
+         :map help-map ("C-;" . iedit-mode-toggle-on-function))
   :config
   ;; Avoid restoring `iedit-mode'
   (with-eval-after-load 'desktop
     (add-to-list 'desktop-minor-mode-table
-         '(iedit-mode nil))))
+                 '(iedit-mode nil))))
 
 ;; Increase selected region by semantic units
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-;; Multiple cursors
-(use-package multiple-cursors
-  :bind (("C-S-c C-S-c"   . mc/edit-lines)
-     ("C->"           . mc/mark-next-like-this)
-     ("C-<"           . mc/mark-previous-like-this)
-     ("C-c C-<"       . mc/mark-all-like-this)
-     ("C-M->"         . mc/skip-to-next-like-this)
-     ("C-M-<"         . mc/skip-to-previous-like-this)
-     ("s-<mouse-1>"   . mc/add-cursor-on-click)
-     ("C-S-<mouse-1>" . mc/add-cursor-on-click)
-     :map mc/keymap
-     ("C-|" . mc/vertical-align-with-space)))
 
 ;; Smartly select region, rectangle, multi cursors
 (use-package smart-region
@@ -282,9 +419,9 @@
   :diminish
   :hook ((prog-mode . subword-mode)
          (minibuffer-setup . subword-mode)))
-;; Open files as another user
-(unless sys/win32p
-  (use-package sudo-edit))
+;; ;; Open files as another user
+;; (unless sys/win32p
+;;   (use-package sudo-edit))
 
 
 (defun bjm/kill-this-buffer()
