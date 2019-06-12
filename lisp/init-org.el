@@ -53,7 +53,7 @@
         org-startup-indented t
         org-ascii-headline-spacing (quote (1 . 1))
         org-pretty-entities t
-        org-plantuml-jar-path (expand-file-name "~/.emacs.d/plugin/plantuml.jar")
+        org-plantuml-jar-path  "/home/ttt/.emacs.d/plugin/plantuml.jar"
         org-hide-emphasis-markers t)
 
   (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
@@ -100,7 +100,7 @@
   ;; plantuml
   (use-package plantuml-mode
     :config
-    (setq plantuml-jar-path (expand-file-name "~/.emacs.d/plugin/plantuml.jar"))
+    (setq plantuml-jar-path "/home/ttt/.emacs.d/plugin/plantuml.jar")
     (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 
@@ -144,7 +144,7 @@
     ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)"))
     ("p" (hot-expand "<s" "perl"))
     ("S" (hot-expand "<s" "sh :results value verbatim"))
-    ("u" (hot-expand "<s" "plantuml :file figures/CHANGE.png :exports results"))
+    ("u" (hot-expand "<s" "plantuml :file figures/CHANGE.png :exports results\n@startuml\n\n@enduml"))
     ("P" (progn
            (insert "#+HEADERS: :results output :exports both :shebang \"#!/usr/bin/env perl\"\n")
            (hot-expand "<s" "perl")))
