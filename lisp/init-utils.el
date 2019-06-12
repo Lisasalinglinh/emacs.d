@@ -181,17 +181,6 @@
     (if (fboundp 'olivetti-mode) (olivetti-mode 1)))
   :hook (nov-mode . my-nov-setup))
 
-;; ;; Edit text for browsers with GhostText or AtomicChrome extension
-;; (use-package atomic-chrome
-;;   :hook ((emacs-startup . atomic-chrome-start-server)
-;;          (atomic-chrome-edit-mode . delete-other-windows))
-;;   :init (setq atomic-chrome-buffer-open-style 'frame)
-;;   :config
-;;   (if (fboundp 'gfm-mode)
-;;       (setq atomic-chrome-url-major-mode-alist
-;;             '(("github\\.com" . gfm-mode)))))
-
-
 ;; Misc
 (use-package copyit)                    ; copy path, url, etc.
 (use-package daemons)                   ; system services/daemons

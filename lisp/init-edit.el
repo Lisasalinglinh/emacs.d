@@ -35,7 +35,7 @@
 (prefer-coding-system 'utf-8)
 
 ;; Miscs
-;; (setq initial-scratch-message nil)
+(setq initial-scratch-message nil)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets) ; Show path if names are same
 (setq adaptive-fill-regexp "[ t]+|[ t]*([0-9]+.|*+)[ t]*")
 (setq adaptive-fill-first-line-regexp "^* *$")
@@ -94,10 +94,6 @@
 (use-package ace-link
   :bind (("M-o" . ace-link-addr))
   :hook (after-init . ace-link-setup-default))
-;; Jump to Chinese characters
-(use-package ace-pinyin
-  :diminish
-  :hook (after-init . ace-pinyin-global-mode))
 
 ;; Minor mode to aggressively keep your code always indented
 (use-package aggressive-indent
@@ -368,10 +364,10 @@
   :diminish
   :if (executable-find "aspell")
   :hook (((text-mode outline-mode) . flyspell-mode)
-     ;; (prog-mode . flyspell-prog-mode)
-     (flyspell-mode . (lambda ()
-                (dolist (key '("C-;" "C-," "C-."))
-                  (unbind-key key flyspell-mode-map)))))
+         ;; (prog-mode . flyspell-prog-mode)
+         (flyspell-mode . (lambda ()
+                            (dolist (key '("C-;" "C-," "C-."))
+                              (unbind-key key flyspell-mode-map)))))
   :init
   (setq flyspell-issue-message-flag nil)
   (setq ispell-program-name "aspell")
@@ -394,7 +390,7 @@
 ;; Move to the beginning/end of line or code
 (use-package mwim
   :bind (([remap move-beginning-of-line] . mwim-beginning-of-code-or-line)
-     ([remap move-end-of-line] . mwim-end-of-code-or-line)))
+         ([remap move-end-of-line] . mwim-end-of-code-or-line)))
 
 ;; Treat undo history as a tree
 (use-package undo-tree

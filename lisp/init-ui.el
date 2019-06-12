@@ -144,14 +144,7 @@
 (setq scroll-step 1
       scroll-margin 0
       scroll-conservatively 100000)
-;; Display Time
-(use-package time
-  :ensure nil
-  :unless (display-graphic-p)
-  :hook (after-init . display-time-mode)
-  :init
-  (setq display-time-24hr-format t
-        display-time-day-and-date t))
+
 ;; Suppress GUI features
 (setq use-file-dialog nil
       use-dialog-box nil

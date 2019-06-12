@@ -270,10 +270,10 @@
 
   ;; Select from xref candidates with Ivy
   (use-package ivy-xref
-    :init
-    (when (boundp 'xref-show-definitions-function)
-      (setq xref-show-definitions-function #'ivy-xref-show-defs))
-    (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
+    :ensure t
+    :init (if (< emacs-major-version 27)
+              (setq xref-show-xrefs-function #'ivy-xref-show-xrefs)
+            (setq xref-show-definitions-function #'ivy-xref-show-defs)))
   ;; Quick launch apps
   (cond
    (sys/linux-x-p
