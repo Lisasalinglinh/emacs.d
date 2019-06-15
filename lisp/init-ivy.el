@@ -267,44 +267,19 @@
     :commands ivy-yasnippet--preview
     :bind ("C-c C-y" . ivy-yasnippet)
     :config (advice-add #'ivy-yasnippet--preview :override #'ignore))
+  (use-package ivy-posframe
+    :init(ivy-posframe-mode 1)
+    :custom-face
+    (ivy-posframe ((t (:background "#282a36"))))
+    (ivy-posframe-border ((t (:background "#6272a4"))))
+    :config
+    (setq ivy-posframe-display-functions-alist
+          '((swiper . nil)
+            (swiper-isearch . nil)
+            (complete-symbol . ivy-posframe-display-at-point)
+            (counsel-M-x . ivy-posframe-display-at-frame-bottom-left)
+            (t . ivy-posframe-display-at-frame-center)))))
 
-  ;; Select from xref candidates with Ivy
-  (use-package ivy-xref
-    :ensure t
-    :init (if (< emacs-major-version 27)
-              (setq xref-show-xrefs-function #'ivy-xref-show-xrefs)
-            (setq xref-show-definitions-function #'ivy-xref-show-defs)))
-  ;; Quick launch apps
-  (cond
-   (sys/linux-x-p
-    (bind-key "C-<f6>" #'counsel-linux-app counsel-mode-map))
-   (sys/macp
-    (use-package counsel-osx-app
-      :bind (:map counsel-mode-map
-                  ("C-<f6>" . counsel-osx-app)))))
-
-  ;; Display world clock using Ivy
-  (use-package counsel-world-clock
-    :bind (:map counsel-mode-map
-                ("C-c c k" . counsel-world-clock)))
-
-  ;; Tramp ivy interface
-  (use-package counsel-tramp
-    :bind (:map counsel-mode-map
-                ("C-c c v" . counsel-tramp))))
-
-(use-package ivy-posframe
-  :init(ivy-posframe-mode 1)
-  :custom-face
-  (ivy-posframe ((t (:background "#282a36"))))
-  (ivy-posframe-border ((t (:background "#6272a4"))))
-  :config
-  (setq ivy-posframe-display-functions-alist
-        '((swiper . nil)
-          (swiper-isearch . nil)
-          (complete-symbol . ivy-posframe-display-at-point)
-          (counsel-M-x . ivy-posframe-display-at-frame-bottom-left)
-          (t . ivy-posframe-display-at-frame-center))))
 (provide 'init-ivy)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
