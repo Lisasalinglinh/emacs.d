@@ -40,7 +40,7 @@
   ;; Always delete and copy recursively
   (setq dired-recursive-deletes 'always)
   (setq dired-recursive-copies 'always)
-  (setq wdired-allow-to-change-permissions t)
+  ;; (setq wdired-allow-to-change-permissions t)
   (setq dired-dwim-target t)
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file) ; was dired-advertised-find-file
 

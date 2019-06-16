@@ -184,6 +184,7 @@
     "Overlay variable for GUD highlighting.")
 
   (defadvice gud-display-line (after my-gud-highlight act)
+
     "Highlight current line."
     (let* ((ov gud-overlay)
            (bf (gud-find-file true-file)))
