@@ -55,7 +55,7 @@
     (call-interactively 'company-yasnippet))
   :config
   (setq company-tooltip-align-annotations t
-        company-tooltip-limit 12
+        company-tooltip-limit 10
         company-idle-delay 0
         company-echo-delay (if (display-graphic-p) nil 0)
         company-require-match nil
@@ -149,7 +149,6 @@
                 (Operator . ,(all-the-icons-material "control_point" :height 0.9 :v-adjust -0.2))
                 (TypeParameter . ,(all-the-icons-faicon "arrows" :height 0.85 :v-adjust -0.05))
                 (Template . ,(all-the-icons-material "format_align_center" :height 0.9 :v-adjust -0.2)))))))
-
 
   ;; Popup documentation for completion candidates
   (when (and (not emacs/>=26p) (display-graphic-p))

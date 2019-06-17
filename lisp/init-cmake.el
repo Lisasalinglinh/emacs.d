@@ -96,11 +96,8 @@
     ("v" rtags-find-virtuals-at-point)
     ("m" eassist-list-methods))
   (global-set-key (kbd "<f7>") 'rtags-hydra/body)
-  ;; :bind (:map c++-mode-map
-  ;;             ("r" . rtags-hydra/body))
-
-  ;; Rtags standard keybindings ([M-. on symbol to go to bindings]).
   (rtags-enable-standard-keybindings))
+
 ;; CMake
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
@@ -109,7 +106,6 @@
 
 ;;http://parbo.github.io/blog/2016/05/10/configuring-emacs-for-cpp/
 (use-package cmake-ide
-  ;; :after rtags
   :ensure t
   :init
   (cmake-ide-setup)
@@ -117,24 +113,24 @@
   (put 'cmake-ide-build-dir 'safe-local-variable #'stringp))
 
 ;; Color mode line for errors.
-;; (use-package flycheck-color-mode-line
-;;   :after flycheck
-;;   :config '(add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
+(use-package flycheck-color-mode-line
+  :after flycheck
+  :config '(add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
 (use-package cmake-font-lock
   :config
   (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
   (add-hook 'cmake-mode-hook 'cmake-font-lock-activate))
 ;; Flycheck rtags.
-;; (use-package flycheck-rtags
-;;   :after rtags
-;;   :config
-;;   (defun my-flycheck-rtags-setup ()
-;;     (flycheck-select-checker 'rtags)
-;;     (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
-;;     (setq-local flycheck-check-syntax-automatically nil))
-;;   (add-hook 'c-mode-hook #'my-flycheck-rtags-setup)
-;;   (add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
-;;   (add-hook 'objc-mode-hook #'my-flycheck-rtags-setup))
+(use-package flycheck-rtags
+  :after rtags
+  :config
+  (defun my-flycheck-rtags-setup ()
+    (flycheck-select-checker 'rtags)
+    (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
+    (setq-local flycheck-check-syntax-automatically nil))
+  (add-hook 'c-mode-hook #'my-flycheck-rtags-setup)
+  (add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
+  (add-hook 'objc-mode-hook #'my-flycheck-rtags-setup))
 
 ;; Flycheck-plantuml/
 (use-package flycheck-plantuml

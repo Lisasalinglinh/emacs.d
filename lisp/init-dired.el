@@ -73,8 +73,6 @@
     :init (diredfl-global-mode 1))
 
   ;; Shows icons
-
-  ;; Shows icons
   (use-package all-the-icons-dired
     :diminish
     :custom-face (all-the-icons-dired-dir-face ((t (:foreground nil))))
