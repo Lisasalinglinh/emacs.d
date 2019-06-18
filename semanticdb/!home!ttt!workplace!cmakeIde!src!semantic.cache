@@ -1,0 +1,48 @@
+;; Object semanticdb-project-database-file-155e561ee288
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "semanticdb-project-database-file-155e561ee288"
+  :tables
+  (list
+    (semanticdb-table "semanticdb-table-155e561ee268"
+      :major-mode c++-mode
+      :tags 
+        '( ("test/hello.h" include nil nil [1 24])
+            ("iostream" include (:system-flag t) nil [25 44])
+            ("main" function
+               (:arguments 
+                  ( ("argc" variable (:type "int") (reparse-symbol arg-sub-list) [54 63])
+                    ("argv" variable
+                       (:pointer 1
+                        :dereference 1
+                        :type "char")
+                        (reparse-symbol arg-sub-list) [64 77]))                  
+                :type "int")
+                nil [45 125]))          
+      :file "main.cpp"
+      :pointmax 126
+      :fsize 125
+      :lastmodtime '(23814 28827 150170 291000)
+      :unmatched-syntax nil)
+    (semanticdb-table "semanticdb-table-155e55cae068"
+      :major-mode c++-mode
+      :tags 
+        '( ("test/hello.h" include nil nil [1 24])
+            ("iostream" include (:system-flag t) nil [25 44])
+            ("print" function
+               (:parent "Hello"
+                :type "void")
+                nil [45 105])
+            ("print" function
+               (:parent "Hello"
+                :arguments 
+                  ( ("s" variable (:type "int") (reparse-symbol arg-sub-list) [125 131]))                  
+                :type "void")
+                nil [107 162]))          
+      :file "hello.cpp"
+      :pointmax 163
+      :fsize 162
+      :lastmodtime '(23814 25494 184973 296000)
+      :unmatched-syntax nil))
+  :file "!home!ttt!workplace!cmakeIde!src!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")

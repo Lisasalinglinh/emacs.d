@@ -48,8 +48,8 @@
   :ensure nil
   :hook (after-init . show-paren-mode)
   :config
-  (setq show-paren-when-point-inside-paren t)
-  (setq show-paren-when-point-in-periphery t))
+  (setq show-paren-when-point-inside-paren t
+        show-paren-when-point-in-periphery t))
 ;; Highlight symbols
 (use-package symbol-overlay
   :diminish

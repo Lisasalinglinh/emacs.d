@@ -1,0 +1,20 @@
+* CPP Compilation and Debug
+** Single file
+1. Compilation
+   Open a ~cpp~ file,to compile for the first time, press =C-u C-u C-r= ,then type compile options in the minibuffer,final press =Enter= to finish compile,if you want to recompile with same options,press =C-r=.
+2. Debug
+   After compile with =-g=,press =F5= to debug,use ~gdb-many-windows~ default,in addition to the default 6 buffers,there are two other useful buffers that are not visible,we can call them by two commands: =gdb-display-disassembly-buffer= to display assembly code, =gdb-display-memory-buffer= to display a portion of program memory.If you want to open them in new frame instead of occupying an existing window,you can run commands with =gdb-frame-*= prefix,this is useful when you have 2 monitors[fn::tuhdo.github.io/c-ide.html].
+
+   In the source buffer when you debug,the following commands are available:
+   | Command | Action                                  |
+   |---------+-----------------------------------------|
+   | =F9=      | set breakpoint                          |
+   | =C-F9=    | Set tmp breakpoint                      |
+   | =M-F9=    | remove breakpoint                       |
+   | =F10=     | Next line                               |
+   | =C-F10=   | Run untill breakpoint or specify line   |
+   | =F11=     | step into function                      |
+   | =C-F11=   | execute a single machine code           |
+   | =F12=     | run untill selected stack frame returns |
+** Multiple files project
+Projects organized by CMake can be compiled,I use cmake-ide package,

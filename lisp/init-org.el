@@ -37,14 +37,15 @@
   :ensure t
   :commands org-try-structure-completion
   :functions hydra-org-template/body
-  :custom-face
-  (org-ellipsis ((t (:foreground nil))))
+  :custom-face  (org-ellipsis ((t (:foreground nil))))
   :bind (("C-c a" . org-agenda)
          ("C-c b" . org-switchb))
-  :hook
-  (org-mode . org-indent-mode)
-  (org-indent-mode . (lambda() (diminish 'org-indent-mode)))
-  (org-mode . visual-line-mode)
+  :hook (org-indent-mode . (lambda()
+                             (diminish 'org-indent-mode)
+                             ;; WORKAROUND: Prevent text moving around while using brackets
+                             ;; @see https://github.com/seagle0128/.emacs.d/issues/88
+                             (make-variable-buffer-local 'show-paren-mode)
+                             (setq show-paren-mode nil)))
   :config
   (setq org-agenda-files '("~/org")
         org-todo-keywords '((sequence "TODO(T)" "DOING(I)" "HANGUP(H)" "|" "DONE(D)" "CANCEL(C)"))
@@ -97,6 +98,16 @@
 
   (org-babel-do-load-languages 'org-babel-load-languages
                                load-language-list)
+
+  ;; Rich text clipboard
+  (use-package org-rich-yank
+    :bind (:map org-mode-map
+                ("C-M-y" . org-rich-yank)))
+
+  ;; Table of contents
+  (use-package toc-org
+    :hook (org-mode . toc-org-mode))
+
   ;; plantuml
   (use-package plantuml-mode
     :config

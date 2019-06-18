@@ -41,6 +41,7 @@
   (setq rtags-path
         (expand-file-name "/usr/local/bin"))
   (setq rtags-autostart-diagnostics t)
+  (setq rtags-use-multiple-cursors t)
   (rtags-diagnostics)
   ;; Timeout for reparse on onsaved buffers.
   (rtags-set-periodic-reparse-timeout 0.5)
@@ -120,14 +121,30 @@
   :config
   (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
   (add-hook 'cmake-mode-hook 'cmake-font-lock-activate))
+;;TEST-------------------------------------------------------------------------------------
+(use-package ivy-rtags
+  ;; :require ivy rtags
+  :config
+  (progn
+    (setq rtags-display-result-backend 'ivy)))
+(use-package company-rtags
+  ;; :require company rtags
+  :config
+  (progn
+    (setq rtags-autostart-diagnostics t)
+    (rtags-diagnostics)
+    (setq rtags-completions-enabled t)
+    (push 'company-rtags company-backendsx)))
+
 ;; Flycheck rtags.
 (use-package flycheck-rtags
-  :after rtags
+  ;; :require flycheck rtags
   :config
   (defun my-flycheck-rtags-setup ()
     (flycheck-select-checker 'rtags)
     (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
-    (setq-local flycheck-check-syntax-automatically nil))
+    (setq-local flycheck-check-syntax-automatically nil)
+    (rtags-set-periodic-reparse-timeout 2.0)) ;;run flycheck 2s after being idle
   (add-hook 'c-mode-hook #'my-flycheck-rtags-setup)
   (add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
   (add-hook 'objc-mode-hook #'my-flycheck-rtags-setup))

@@ -1,0 +1,126 @@
+;; Object semanticdb-project-database-file-156436c35554
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "semanticdb-project-database-file-156436c35554"
+  :tables
+  (list
+    (semanticdb-table "semanticdb-table-156436c237e4"
+      :major-mode c++-mode
+      :tags 
+        '( ("TEST_H" variable (:constant-flag t) nil [24 30])
+            ("string" include (:system-flag t) nil [32 49])
+            ("Test" type
+               (:members 
+                  ( ("public" label nil (reparse-symbol classsubparts) [63 70])
+                    ("Test" function
+                       (:prototype-flag t
+                        :constructor-flag t
+                        :type ("Test" type (:type "class") nil nil))
+                        (reparse-symbol classsubparts) [75 82])
+                    ("Test" function
+                       (:type "void"
+                        :destructor-flag t
+                        :prototype-flag t)
+                        (reparse-symbol classsubparts) [87 103])
+                    ("print" function
+                       (:prototype-flag t
+                        :type "void")
+                        (reparse-symbol classsubparts) [108 121])
+                    ("print" function
+                       (:prototype-flag t
+                        :arguments 
+                          ( ("str" variable
+                               (:reference 1
+                                :constant-flag t
+                                :type ("std::string" type (:type "class") nil nil))
+                                (reparse-symbol arg-sub-list) [137 160]))                          
+                        :type "void")
+                        (reparse-symbol classsubparts) [126 161])
+                    ("setVal" function
+                       (:prototype-flag t
+                        :arguments 
+                          ( ("v" variable (:type "int") (reparse-symbol arg-sub-list) [178 184]))                          
+                        :type "void")
+                        (reparse-symbol classsubparts) [166 185])
+                    ("getVal" function
+                       (:prototype-flag t
+                        :type "int")
+                        (reparse-symbol classsubparts) [190 203])
+                    ("private" label nil (reparse-symbol classsubparts) [204 212])
+                    ("m_val" variable
+                       (:default-value "0"
+                        :type "int")
+                        (reparse-symbol classsubparts) [217 230]))                  
+                :type "class")
+                nil [50 233]))          
+      :file "test.h"
+      :pointmax 256
+      :fsize 255
+      :lastmodtime '(23815 17302 559901 651000)
+      :unmatched-syntax nil
+      :lexical-table 
+        '(("TEST_H")
+          )
+)
+    (semanticdb-table "semanticdb-table-156436c23804"
+      :major-mode c++-mode
+      :tags 
+        '( ("test.h" include nil nil [1 18])
+            ("iostream" include (:system-flag t) nil [19 38])
+            ("Test" function
+               (:constructor-flag t
+                :parent "Test"
+                :type ("Test" type (:type "class") nil nil))
+                nil [40 55])
+            ("Test" function
+               (:destructor-flag t
+                :parent "Test"
+                :type "void")
+                nil [57 73])
+            ("print" function
+               (:parent "Test"
+                :type "void")
+                nil [75 128])
+            ("print" function
+               (:parent "Test"
+                :arguments 
+                  ( ("str" variable
+                       (:reference 1
+                        :constant-flag t
+                        :type ("std::string" type (:type "class") nil nil))
+                        (reparse-symbol arg-sub-list) [147 170]))                  
+                :type "void")
+                nil [130 200])
+            ("setVal" function
+               (:parent "Test"
+                :arguments 
+                  ( ("v" variable (:type "int") (reparse-symbol arg-sub-list) [220 226]))                  
+                :type "void")
+                nil [202 245]))          
+      :file "test.cpp"
+      :pointmax 284
+      :fsize 283
+      :lastmodtime '(23815 17174 64173 739000)
+      :unmatched-syntax nil)
+    (semanticdb-table "semanticdb-table-156436c35534"
+      :major-mode c++-mode
+      :tags 
+        '( ("test.h" include nil nil [1 18])
+            ("iostream" include (:system-flag t) nil [19 38])
+            ("main" function
+               (:arguments 
+                  ( ("argc" variable (:type "int") (reparse-symbol arg-sub-list) [48 57])
+                    ("argv" variable
+                       (:pointer 1
+                        :dereference 1
+                        :type "char")
+                        (reparse-symbol arg-sub-list) [58 71]))                  
+                :type "int")
+                nil [39 187]))          
+      :file "main.cpp"
+      :pointmax 188
+      :fsize 187
+      :lastmodtime '(23815 17662 990389 910000)
+      :unmatched-syntax nil))
+  :file "!home!ttt!Music!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")
