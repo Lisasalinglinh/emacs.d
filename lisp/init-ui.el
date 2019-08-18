@@ -43,6 +43,10 @@
   :init (load-theme 'doom-dracula t)
   :config
   (doom-themes-visual-bell-config)
+  (set-face-attribute 'doom-visual-bell nil
+                      :background (face-foreground 'error)
+                      :foreground (face-background 'default)
+                      :inverse-video nil)
   (doom-themes-org-config)
   (doom-themes-treemacs-config))
 

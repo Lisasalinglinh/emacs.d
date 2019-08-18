@@ -149,7 +149,7 @@
     ("i" (hot-expand "<i"))
     ("e" (hot-expand "<s" "emacs-lisp -n -r :exports both :results value verbatim"))
     ("r" (hot-expand "<s" "ruby"))
-    ("c" (hot-expand "<s" "C++ -n -r :exports both :results value verbatim"))
+    ("c" (hot-expand "<s" "C++ -n -r :includes <iostream> :flags -Wall :main no :exports both :results value verbatim"))
     ("C" (hot-expand "<s" "C -n -r :exports both :results value verbatim"))
     ("y" (hot-expand "<s" "python :results value verbatim"))
     ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)"))

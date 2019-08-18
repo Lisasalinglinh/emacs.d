@@ -1,5 +1,3 @@
-;; init-edit.el --- Initialize editing configurations.	-*- lexical-binding: t -*-
-
 ;; Copyright (C) 2019 Vincent Zhang
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
@@ -43,14 +41,7 @@
 (setq make-backup-files nil)               ; Forbide to make backup files
 (setq auto-save-default nil)               ; Disable auto save
 (setq set-mark-command-repeat-pop t)       ; Repeating C-SPC after popping mark pops it again
-;; (setq-default kill-whole-line t)           ; Kill line including '\n'
-;; ;; overwrite selected text
-;; (delete-selection-mode t)
-;; ;; overwrite selected text
-;; (delete-selection-mode t)
-
 (setq-default major-mode 'text-mode)
-
 (setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
 (setq sentence-end-double-space nil)
 
@@ -76,10 +67,10 @@
   :ensure nil
   :defines dired-mode-map
   :bind (("C-c C-z ." . browse-url-at-point)
-     ("C-c C-z b" . browse-url-of-buffer)
-     ("C-c C-z r" . browse-url-of-region)
-     ("C-c C-z u" . browse-url)
-     ("C-c C-z v" . browse-url-of-file))
+         ("C-c C-z b" . browse-url-of-buffer)
+         ("C-c C-z r" . browse-url-of-region)
+         ("C-c C-z u" . browse-url)
+         ("C-c C-z v" . browse-url-of-file))
   :init
   (with-eval-after-load 'dired
     (bind-key "C-c C-z f" #'browse-url-of-file dired-mode-map)))
@@ -162,6 +153,9 @@
   :ensure nil
   :hook (after-init . electric-pair-mode)
   :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
+;; Preview when `goto-line`
+(use-package goto-line-preview
+  :bind ([remap goto-line] . goto-line-preview))
 
 (use-package multiple-cursors
   :functions hydra-multiple-cursors
@@ -231,7 +225,7 @@
   ("C-'"   . avy-resume)
   ("C-:"   . avy-goto-char-2-below)
   ("C-;"   . avy-goto-char)
-  ("M-j"   . hydra-avy/body)
+  ("C-M-j"   . hydra-avy/body)
   ("C-M-v" . hydra-viewer/body)
   :preface
   ;; fixed cursor scroll-up
@@ -251,6 +245,10 @@
     (mark-sexp)
     (copy-region-as-kill (region-beginning) (region-end)))
   :config
+  (setq avy-all-windows nil
+        avy-all-windows-alt t
+        avy-background t
+        avy-style 'pre)
   (when (eq system-type 'darwin)
     (progn
       (global-set-key (kbd "C-:") 'avy-goto-char)
@@ -259,7 +257,7 @@
   (use-package avy-zap
     :bind
     ("M-z" . avy-zap-to-char-dwim)
-    ("M-z" . avy-zap-up-to-char-dwim))
+    ("M-Z" . avy-zap-up-to-char-dwim))
 
   (with-eval-after-load 'hydra
     (defhydra hydra-viewer (:color pink :hint nil)
@@ -324,7 +322,7 @@
       ("k" avy-kill-region)
       ("Y" avy-copy-line :exit t)
       ("y" avy-copy-region :exit t)
-      ("n" goto-line :exit t)
+      ("n" goto-line-preview :exit t)
       ("o" org-clock-jump-to-current-clock :exit t)
       ("z" avy-zap-to-char-dwim :exit t)
       ("v" hydra-viewer/body :exit t)
@@ -334,7 +332,26 @@
       ("," flymake-goto-previous-error)
       ("." flymake-goto-next-error)
       ("q" nil))))
-
+;; Flexible text folding
+(use-package origami
+  :pretty-hydra
+  ((:title (pretty-hydra-title "Origami" 'octicon "fold")
+    :color blue :quit-key "q")
+   ("Node"
+    ((":" origami-recursively-toggle-node "toggle recursively")
+     ("a" origami-toggle-all-nodes "toggle all")
+     ("t" origami-toggle-node "toggle current")
+     ("o" origami-show-only-node "only show current"))
+    "Actions"
+    (("u" origami-undo "undo")
+     ("d" origami-redo "redo")
+     ("r" origami-reset "reset"))))
+  :bind (:map origami-mode-map
+         ("C-`" . origami-hydra/body))
+  :hook (prog-mode . origami-mode)
+  :init (setq origami-show-fold-header t)
+  :config
+  (face-spec-reset-face 'origami-fold-header-face))
 ;; Edit multiple regions in the same way simultaneously
 (use-package iedit
   :defines desktop-minor-mode-table

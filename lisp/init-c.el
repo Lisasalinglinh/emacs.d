@@ -40,26 +40,31 @@
          ("\\.cc\\'" . c++-mode)
          ("\\.cpp\\'" . c++-mode))
   :bind (:map c-mode-base-map
-              ("C-c c" . compile))
+         ("C-c c" . compile))
   :config
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (use-package modern-cpp-font-lock
     :diminish
     :init (modern-c++-font-lock-global-mode t))
 
+  (use-package clang-format+
+    :hook (c++-mode . clang-format+-mode))
   ;;https://eklitzke.org/smarter-emacs-clang-format
-  (use-package clang-format
-    :bind(
-          :map c++-mode-map
-          ;; ("C-i" . 'clang-format)
-          ("C-c i" . 'clang-format-region)
-          ("C-c u" . 'clang-format-buffer))
-    :config
-    ;; style option: "llvm" "google" "chromium" "mozilla" "webkit"
-    ;; clang.llvm.org/docs/ClangFormatStyleOptions.html
-    (if (not(file-exists-p ".clang-format"))
-        (setq clang-format-style-option "llvm")))
-
+  ;; (use-package clang-format
+  ;;   :bind(
+  ;;         :map c++-mode-map
+  ;;         ;; ("C-i" . 'clang-format)
+  ;;         ("C-c i" . 'clang-format-region)
+  ;;         ("C-c u" . 'clang-format-buffer))
+  ;;   :config
+  ;;   ;; style option: "llvm" "google" "chromium" "mozilla" "webkit"
+  ;;   ;; clang.llvm.org/docs/ClangFormatStyleOptions.html
+  ;;   (if (not(file-exists-p ".clang-format"))
+  ;;       (setq clang-format-style-option "llvm")))
+  (use-package flycheck-clang-analyzer
+    :ensure t
+    :after flycheck
+    :config (flycheck-clang-analyzer-setup))
   (use-package irony
     :defines (irony-mode-map irony-server-w32-pipe-buffer-size)
     :hook (((c-mode c++-mode objc-mode) . irony-mode)
@@ -74,8 +79,8 @@
 
     (with-eval-after-load 'counsel
       (bind-keys :map irony-mode-map
-                 ([remap completion-at-point] . counsel-irony)
-                 ([remap complete-symbol] . counsel-irony)))
+        ([remap completion-at-point] . counsel-irony)
+        ([remap complete-symbol] . counsel-irony)))
 
     (use-package irony-eldoc
       :hook (irony-mode . irony-eldoc))
@@ -161,7 +166,7 @@
   (defun my-c++-mode ()
     (setq get-buffer-compile-command
           (lambda (file)
-            (cons (format "g++ -Wall -std=c++11 -Wunused -Wfloat-equal -o %s %s && ./%s"
+            (cons (format "g++-9 -Wall -o %s %s && ./%s"
                           (file-name-sans-extension file)
                           file
                           (file-name-sans-extension file))

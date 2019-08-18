@@ -34,26 +34,6 @@
 ;; e.g. display “lambda” as “λ”
 (use-package prog-mode
   :ensure nil
-  ;; :hook ((after-init . global-prettify-symbols-mode)
-  ;;        (prog-mode . (lambda ()
-  ;;                       (setq prettify-symbols-alist
-  ;;                             '(("lambda" . ?λ)
-  ;;                               ("->" . ?→)
-  ;;                               ("->>" . ?↠)
-  ;;                               ("=>" . ?⇒)
-  ;;                               ("map" . ?↦)
-  ;;                               ("/=" . ?≠)
-  ;;                               ("!=" . ?≠)
-  ;;                               ("==" . ?≡)
-  ;;                               ("<=" . ?≤)
-  ;;                               (">=" . ?≥)
-  ;;                               ("=<<" . (?= (Br . Bl) ?≪))
-  ;;                               (">>=" . (?≫ (Br . Bl) ?=))
-  ;;                               ("<=<" . ?↢)
-  ;;                               (">=>" . ?↣)
-  ;;                               ("&&" . ?∧)
-  ;;                               ("||" . ?∨)
-  ;;                               ("not" . ?¬))))))
   :init (setq prettify-symbols-unprettify-at-point 'right-edge))
 ;; Compilation Mode
 (use-package compile
@@ -66,39 +46,6 @@
     (when (eq major-mode 'compilation-mode)
       (ansi-color-apply-on-region compilation-filter-start (point-max))))
   :hook (compilation-filter . my-colorize-compilation-buffer))
-
-;; Jump to definition via `ag'/`rg'/`grep'
-(use-package dumb-jump
-  :functions dumb-jump-hydra/body
-  :bind (("M-g o" . dumb-jump-go-other-window)
-         ("M-g j" . dumb-jump-go)
-         ("M-g i" . dumb-jump-go-prompt)
-         ("M-g x" . dumb-jump-go-prefer-external)
-         ("M-g z" . dumb-jump-go-prefer-external-other-window))
-  :hook (after-init . dumb-jump-mode)
-  :config
-  (setq dumb-jump-prefer-searcher 'rg)
-  (with-eval-after-load 'ivy
-    (setq dumb-jump-selector 'ivy))
-
-  (defhydra hydra-dumb-jump (:color blue :hint none)
-    "
-^Jump^                            ^Other^
-^^────────────────────────────────^^───────────────
-_j_: Go                           _i_: Prompt
-_o_: Go other window              _l_: Quick look
-_e_: Go external                  _b_: Back
-_x_: Go external other window
-"
-    ("j" dumb-jump-go "Go")
-    ("o" dumb-jump-go-other-window "Go other window")
-    ("e" dumb-jump-go-prefer-external "Go external")
-    ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
-    ("i" dumb-jump-go-prompt "Prompt")
-    ("l" dumb-jump-quick-look "Quick look")
-    ("b" dumb-jump-back "Back")
-    ("q" nil "quit"))
-  (bind-key "C-M-j" #'hydra-dumb-jump/body dumb-jump-mode-map))
 
 (use-package rmsbolt)
 

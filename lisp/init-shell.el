@@ -66,15 +66,6 @@
 
   (add-hook 'comint-output-filter-functions #'comint-strip-ctrl-m)
 
-  ;; Company mode backend for shell functions
-  (use-package company-shell
-    :after company
-    :init (cl-pushnew '(company-shell company-shell-env company-fish-shell)
-                      company-backends))
-
-  ;; Bash completion
-  (use-package bash-completion
-    :init (bash-completion-setup))
 
   ;; ANSI & XTERM 256 color support
   (use-package xterm-color
@@ -87,8 +78,10 @@
     (add-hook 'shell-mode-hook
               (lambda () (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)))))
 
-;; Multi term
-(use-package multi-term)
+
+;; Bash completion
+(use-package bash-completion
+  :init (bash-completion-setup))
 
 ;; Shell Pop
 (use-package shell-pop
@@ -99,7 +92,6 @@
                  '("ansi-term" "*ansi-term*"
                    (lambda () (ansi-term shell-pop-term-shell))))))
           (setq shell-pop-shell-type val)))
-
 (provide 'init-shell)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

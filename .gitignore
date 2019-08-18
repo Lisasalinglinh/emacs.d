@@ -66,6 +66,8 @@ tmp*
 ido.*
 flycheck_*.el*
 README.html
+pyim/
+semanticdb/
 *.sqlite
 *.pyim
 *.jar

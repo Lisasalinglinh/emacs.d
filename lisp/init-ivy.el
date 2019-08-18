@@ -71,11 +71,6 @@
          ("C-c c w" . counsel-colors-web)
          ("C-c c z" . counsel-fzf)
 
-         ;; Find counsel commands quickly
-         ("<f6>" . (lambda ()
-                     (interactive)
-                     (counsel-M-x "^counsel-")))
-
          :map ivy-minibuffer-map
          ("C-w" . ivy-yank-word)
          :map counsel-find-file-map
@@ -173,17 +168,18 @@
           counsel-rg
           counsel-pt))
   (defun my-ivy-fly-back-to-present ()
-    (remove-hook 'pre-command-hook 'my-ivy-fly-back-to-present t)
+    ;; (remove-hook 'pre-command-hook 'my-ivy-fly-back-to-present t)
     (cond ((and (memq last-command my-ivy-fly-commands)
                 (equal (this-command-keys-vector) (kbd "M-p")))
            ;; repeat one time to get straight to the first history item
            (setq unread-command-events
                  (append unread-command-events
                          (listify-key-sequence (kbd "M-p")))))
-          ((memq this-command '(self-insert-command
-                                yank
-                                ivy-yank-word
-                                counsel-yank-pop))
+          ((or (memq this-command '(self-insert-command
+                                    yank
+                                    ivy-yank-word
+                                    counsel-yank-pop))
+               (equal (this-command-keys-vector) (kbd "M-n")))
            (delete-region (point)
                           (point-max)))))
 
@@ -198,8 +194,15 @@
                               (buffer-string))))))
         (when future
           (save-excursion
-            (insert (propertize future 'face 'shadow)))
-          (add-hook 'pre-command-hook 'my-ivy-fly-back-to-present nil t)))))
+
+            (insert (propertize (replace-regexp-in-string
+                                 "\\\\_<" ""
+                                 (replace-regexp-in-string
+                                  "\\\\_>" ""
+                                  future))
+                                'face 'shadow)))
+          (add-hook 'pre-command-hook 'my-ivy-fly-back-to-present nil t))
+        (add-hook 'pre-command-hook 'my-ivy-fly-back-to-present nil t))))
 
   (add-hook 'minibuffer-setup-hook #'my-ivy-fly-time-travel)
   ;; Improve search experience of `swiper'
@@ -238,24 +241,37 @@
   ;; Enhance M-x
   (use-package amx
     :init (setq amx-history-length 20))
-  ;; Enhance fuzzy matching
-  (use-package flx
-    :config (setq ivy-re-builders-alist
-                  '((swiper . ivy--regex-plus)
-                    (swiper-all . ivy--regex-plus)
-                    (swiper-isearch . ivy--regex-plus)
-                    (counsel-ag . ivy--regex-plus)
-                    (counsel-rg . ivy--regex-plus)
-                    (counsel-pt . ivy--regex-plus)
-                    (counsel-ack . ivy--regex-plus)
-                    (counsel-grep . ivy--regex-plus)
-                    (t . ivy--regex-fuzzy))))
+  ;; Better sorting and filtering
+  (use-package prescient
+    :commands prescient-persist-mode
+    :init
+    (setq prescient-filter-method '(literal regexp initialism fuzzy))
+    (prescient-persist-mode 1))
 
+  (use-package ivy-prescient
+    :commands ivy-prescient-re-builder
+    :custom-face (ivy-minibuffer-match-face-1 ((t (:inherit font-lock-doc-face :foreground nil))))
+    :preface
+    (defun ivy-prescient-non-fuzzy (str)
+      (let ((prescient-filter-method '(literal regexp)))
+        (ivy-prescient-re-builder str)))
+    :init
+    (setq ivy-prescient-enable-filtering t
+          ivy-prescient-retain-classic-highlighting t
+          ivy-re-builders-alist '((counsel-ag . ivy-prescient-non-fuzzy)
+                                  (counsel-rg . ivy-prescient-non-fuzzy)
+                                  (counsel-pt . ivy-prescient-non-fuzzy)
+                                  (counsel-grep . ivy-prescient-non-fuzzy)
+                                  (swiper . ivy-prescient-non-fuzzy)
+                                  (swiper-isearch . ivy-prescient-non-fuzzy)
+                                  (swiper-all . ivy-prescient-non-fuzzy)
+                                  (t . ivy-prescient-re-builder)))
+    (ivy-prescient-mode 1))
 
   ;; Additional key bindings for Ivy
   (use-package ivy-hydra
     :bind (:map ivy-minibuffer-map
-                ("M-o" . ivy-dispatching-done-hydra)))
+           ("M-o" . ivy-dispatching-done-hydra)))
   ;; Ivy integration for Projectile
   (use-package counsel-projectile
     :init

@@ -79,7 +79,7 @@
 ;; Packages
 ;; Without this comment Emacs25 adds (package-initialize) here
 (require 'init-package)
-
+(require 'init-hydra)
 ;; Preferences
 (require 'init-basic)
 (require 'init-ui)

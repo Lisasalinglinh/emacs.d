@@ -1,5 +1,4 @@
 (use-package pyim
-  :defer 2
   :ensure nil
   :demand t
   :config
@@ -23,7 +22,7 @@
   (require 'pyim-greatdict)
   (pyim-greatdict-enable)
   (setq pyim-dicts
-        '((:name "greatdict" :file (expand-file-name "~/.emacs.d/plugin/plantuml.jar"))))
+        '((:name "greatdict" :file "/home/ttt/.emacs.d/plugin/pyim-greatdict.pyim")))
   :custom-face
   (pyim-page ((t (:inherit default :background "#333333" :foreground "yellow"))))
   :bind
