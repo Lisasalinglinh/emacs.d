@@ -42,6 +42,9 @@
 (use-package doom-themes
   :init (load-theme 'doom-dracula t)
   :config
+  (set-face-foreground 'mode-line (face-foreground 'default))
+  (with-eval-after-load 'swiper
+    (set-face-background 'swiper-background-match-face-1 "SlateGray1"))
   (doom-themes-visual-bell-config)
   (set-face-attribute 'doom-visual-bell nil
                       :background (face-foreground 'error)

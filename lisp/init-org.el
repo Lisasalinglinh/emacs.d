@@ -30,6 +30,8 @@
 
 ;;; Code:
 ;; https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-C.html
+;;https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-gnuplot.html
+;; http://gnuplot.sourceforge.net/demo/
 (eval-when-compile
   (require 'init-const))
 
@@ -54,9 +56,14 @@
         org-startup-indented t
         org-ascii-headline-spacing (quote (1 . 1))
         org-pretty-entities t
-        org-plantuml-jar-path  "/home/ttt/.emacs.d/plugin/plantuml.jar"
         org-hide-emphasis-markers t)
 
+  (setq org-plantuml-jar-path
+        (expand-file-name "/home/ttt/.emacs.d/plugin/plantuml.jar"))
+
+  ;; Enable plantuml-mode for PlantUML files
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
   (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
   (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
@@ -79,7 +86,8 @@
                                (sass . t)
                                (C . t)
                                (java . t)
-                               (plantuml . t)))
+                               (plantuml . t)
+                               (gnuplot . t)))
 
   ;; ob-sh renamed to ob-shell since 26.1.
   (if emacs/>=26p
@@ -102,7 +110,7 @@
   ;; Rich text clipboard
   (use-package org-rich-yank
     :bind (:map org-mode-map
-                ("C-M-y" . org-rich-yank)))
+           ("C-M-y" . org-rich-yank)))
 
   ;; Table of contents
   (use-package toc-org
@@ -134,7 +142,7 @@
   _a_scii   _v_erse     p_y_thon        _I_NCLUDE:
   _s_rc     _g_o        _p_erl          _H_TML:
   _h_tml    plant_u_ml  _S_HELL         _A_SCII:
-  _C_       ^ ^         _P_erl          ce_n_ter
+  _C_       gunpol_t_   _P_erl          ce_n_ter
   ^ ^       ^ ^         ^ ^
   "
     ("s" (hot-expand "<s"))
@@ -155,13 +163,15 @@
     ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)"))
     ("p" (hot-expand "<s" "perl"))
     ("S" (hot-expand "<s" "sh :results value verbatim"))
-    ("u" (hot-expand "<s" "plantuml :file figures/CHANGE.png :exports results\n@startuml\n\n@enduml"))
+    ("u" (hot-expand "<s" "plantuml :file figures/CHANGE.png :exports results\n@startuml\n@enduml"))
     ("P" (progn
            (insert "#+HEADERS: :results output :exports both :shebang \"#!/usr/bin/env perl\"\n")
            (hot-expand "<s" "perl")))
     ("I" (hot-expand "<I"))
     ("H" (hot-expand "<H"))
     ("A" (hot-expand "<A"))
+    ("t" (hot-expand "<s" "gnuplot :var data= :file output.png :exports results"))
+
     ("<" self-insert-command "ins")
     ("q" nil "quit"))
   (bind-key "<"
