@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: skin background color
+# key: bkc
+# --
+skinparam backgroundColor #EEEEEE

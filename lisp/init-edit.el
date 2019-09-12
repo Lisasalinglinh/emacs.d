@@ -62,19 +62,6 @@
   :diminish
   :hook (after-init . global-auto-revert-mode))
 
-;; Pass a URL to a WWW browser
-(use-package browse-url
-  :ensure nil
-  :defines dired-mode-map
-  :bind (("C-c C-z ." . browse-url-at-point)
-         ("C-c C-z b" . browse-url-of-buffer)
-         ("C-c C-z r" . browse-url-of-region)
-         ("C-c C-z u" . browse-url)
-         ("C-c C-z v" . browse-url-of-file))
-  :init
-  (with-eval-after-load 'dired
-    (bind-key "C-c C-z f" #'browse-url-of-file dired-mode-map)))
-
 ;; Click to browse URL or to send to e-mail address
 (use-package goto-addr
   :ensure nil
@@ -375,22 +362,6 @@
 (use-package smart-region
   :hook (after-init . smart-region-on))
 
-;; On-the-fly spell checker
-(use-package flyspell
-  :ensure nil
-  :diminish
-  :if (executable-find "aspell")
-  :hook (((text-mode outline-mode) . flyspell-mode)
-         ;; (prog-mode . flyspell-prog-mode)
-         (flyspell-mode . (lambda ()
-                            (dolist (key '("C-;" "C-," "C-."))
-                              (unbind-key key flyspell-mode-map)))))
-  :init
-  (setq flyspell-issue-message-flag nil)
-  (setq ispell-program-name "aspell")
-  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together")))
-
-;; Hungry deletion
 (use-package hungry-delete
   :diminish
   :hook (after-init . global-hungry-delete-mode)
@@ -422,20 +393,6 @@
   :config
   ;; FIXME:  keep the diff window
   (make-variable-buffer-local 'undo-tree-visualizer-diff))
-;; Goto last change
-(use-package goto-chg
-  :bind ("C-," . goto-last-change))
-
-;; Handling capitalized subwords in a nomenclature
-(use-package subword
-  :ensure nil
-  :diminish
-  :hook ((prog-mode . subword-mode)
-         (minibuffer-setup . subword-mode)))
-;; ;; Open files as another user
-;; (unless sys/win32p
-;;   (use-package sudo-edit))
-
 
 (defun bjm/kill-this-buffer()
   "Kill the current buffer."

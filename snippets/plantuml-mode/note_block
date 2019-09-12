@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: note block
+# key: ntb
+# --
+note left of $1
+$2
+end note

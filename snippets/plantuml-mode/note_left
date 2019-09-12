@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: note left
+# key: ntl
+# --
+note left: $1

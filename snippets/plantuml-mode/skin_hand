@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: skin handwritten
+# key: hdw
+# --
+skinparam handwritten true

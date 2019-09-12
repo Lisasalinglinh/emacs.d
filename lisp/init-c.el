@@ -166,7 +166,7 @@
   (defun my-c++-mode ()
     (setq get-buffer-compile-command
           (lambda (file)
-            (cons (format "g++-9 -Wall -o %s %s && ./%s"
+            (cons (format "g++-9 -Wall -o %s %s && time ./%s"
                           (file-name-sans-extension file)
                           file
                           (file-name-sans-extension file))

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: footer
+# key: ft
+# --
+center footer
+$1
+endfooter

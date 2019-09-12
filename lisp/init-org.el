@@ -86,6 +86,7 @@
                                (sass . t)
                                (C . t)
                                (java . t)
+                               (dot . t)
                                (plantuml . t)
                                (gnuplot . t)))
 

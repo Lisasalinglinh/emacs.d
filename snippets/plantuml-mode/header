@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: header
+# key: hd
+# --
+center header
+$1
+endheader

@@ -158,11 +158,9 @@
 
 ;; Misc
 (use-package copyit)                    ; copy path, url, etc.
-(use-package daemons)                   ; system services/daemons
 (use-package diffview)                  ; side-by-side diff view
-(use-package esup)                      ; Emacs startup profiler
 (use-package htmlize)                   ; covert to html
-
+(use-package tldr)
 (provide 'init-utils)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

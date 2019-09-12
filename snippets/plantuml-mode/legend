@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: legend
+# key: lgd
+# --
+legend center
+$1
+endlegend

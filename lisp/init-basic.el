@@ -29,10 +29,6 @@
 ;;
 
 ;;; Code:
-
-(eval-when-compile
-  (require 'init-const)
-  (require 'init-custom))
 ;; Compatibility
 (unless (fboundp 'caadr)
   (defun caadr (x)
@@ -40,13 +36,12 @@
     (declare (compiler-macro internal--compiler-macro-cXXr))
     (car (car (cdr x)))))
 ;; Environment
-(when (or sys/mac-x-p sys/linux-x-p)
-  (use-package exec-path-from-shell
-    :init
-    (setq exec-path-from-shell-check-startup-files nil)
-    (setq exec-path-from-shell-variables '("PATH" "MANPATH" "PYTHONPATH" "GOPATH"))
-    (setq exec-path-from-shell-arguments '("-l"))
-    (exec-path-from-shell-initialize)))
+(use-package exec-path-from-shell
+  :init
+  (setq exec-path-from-shell-check-startup-files nil)
+  (setq exec-path-from-shell-variables '("PATH" "MANPATH" "PYTHONPATH" "GOPATH"))
+  (setq exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-initialize))
 
 (use-package recentf
   :ensure nil
@@ -64,19 +59,6 @@
                           "recentf"
                           "url"
                           "COMMIT_EDITMSG\\'")))
-(use-package savehist
-  :ensure nil
-  :hook (after-init . savehist-mode)
-  :init (setq enable-recursive-minibuffers t ; Allow commands in minibuffers
-              history-length 1000
-              savehist-additional-variables '(mark-ring
-                                              global-mark-ring
-                                              search-ring
-                                              regexp-search-ring
-                                              extended-command-history)
-              savehist-autosave-interval 300))
-
-
 (use-package simple
   :ensure nil
   :hook (window-setup . size-indication-mode)

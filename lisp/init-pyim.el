@@ -3,7 +3,6 @@
   :demand t
   :config
   (setq default-input-method "pyim"
-        ;; (global-set-key (kbd "C-\\") 'toggle-input-method)
         pyim-page-tooltip 'posframe
         pyim-default-scheme 'quanpin
         pyim-page-style 'vertical
