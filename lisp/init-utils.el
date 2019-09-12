@@ -161,6 +161,9 @@
 (use-package diffview)                  ; side-by-side diff view
 (use-package htmlize)                   ; covert to html
 (use-package tldr)
+(use-package list-environment)
+(use-package memory-usage)
+(use-package ztree)
 (provide 'init-utils)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
